@@ -1,5 +1,8 @@
-class Game {
-    constructor() {
-        this.diceContainer = document.getElementById("dice-container");
-    }
-}
+import { Game } from './game.js';
+
+let game;
+
+document.getElementById("startGame").addEventListener('click', () => {
+    console.log("Start Game");
+    game = new Game();
+});

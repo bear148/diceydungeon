@@ -6,14 +6,49 @@
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
+        <link rel="stylesheet" href="style.css">
     </head>
     <body>
+        <div id="start-menu">
+            <h1>Dicey Dungeons</h1>
+            <button id="startGame">Start Game</button>
+        </div>
         <div id="game-container">
-            <div id="dice-container">
+            <div id="menu" class="hidden">
+                <h1>Pick A Dungeon</h1>
+                <div id="dungeon-container">
+                    <div class="dungeon" dungeon-id="1">
+                        <img class="dungeon-icon" src="/assets/swamp.png">
+                        <h2>Muddy Swamp</h2>
+                    </div>
+                    <div class="dungeon" dungeon-id="1">
+                        <img class="dungeon-icon" src="/assets/swamp.png">
+                        <h2>Muddy Swamp</h2>
+                    </div>
+                    <div class="dungeon" dungeon-id="1">
+                        <img class="dungeon-icon" src="/assets/swamp.png">
+                        <h2>Muddy Swamp</h2>
+                    </div>
+                    <div class="dungeon" dungeon-id="1">
+                        <img class="dungeon-icon" src="/assets/swamp.png">
+                        <h2>Muddy Swamp</h2>
+                    </div>
+                    <div class="dungeon" dungeon-id="1">
+                        <img class="dungeon-icon" src="/assets/swamp.png">
+                        <h2>Muddy Swamp</h2>
+                    </div>
+                </div>
+            </div>
+            <div id="combat-container" class="hidden">
                 
             </div>
+            <div id="dice-container" class="hidden">
+                
+            </div>
+            <div id="controls" class="hidden">
+            </div>
         </div>
-        <script src="/js/index.js" type="module" async defer></script>
+        <p id="credit">Made by Michael S.</p>
+        <script src="/js/index.js" type="module" defer></script>
     </body>
 </html>

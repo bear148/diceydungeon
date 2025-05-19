@@ -1,0 +1,101 @@
+:root {
+    --blue: rgb(0, 0, 155);
+    --l-blue: rgb(82, 82, 205);
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction:  column;
+    flex-wrap: nowrap;
+    background-image: linear-gradient(to top right, rgb(0,0,0), rgb(24, 24, 24));
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: white;
+}
+
+#menu,
+#game-container,
+#controls {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+#start-menu h1 {
+    font-size: 3rem;
+}
+
+#start-menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    color: white;
+}
+
+button:hover {
+    background-color: var(--l-blue);
+    box-shadow: 3px 3px 30px var(--blue);
+}
+
+button {
+    background-color: var(--blue);
+    color: white;
+    border: none;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    width: fit-content;
+}
+
+#credit {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    margin: 0;
+    padding: 10px;
+    color: white;
+}
+
+#menu {
+    display: flex;
+    max-width: 1000px;
+}
+
+#dungeon-container {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.dungeon {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+
+    width: fit-content;
+}
+
+.dungeon:hover {
+    box-shadow: 3px 3px 30px var(--blue);
+}
+
+.dungeon h2 {
+    font-weight: normal;
+    width: fit-content;
+}
+
+.dungeon img {
+    width: 50%;
+}
+
+.hidden {
+    display: none !important;
+}
