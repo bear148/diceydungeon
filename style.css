@@ -41,11 +41,13 @@ body {
     color: white;
 }
 
+a:hover,
 button:hover {
     background-color: var(--l-blue);
     box-shadow: 3px 3px 30px var(--blue);
 }
 
+a,
 button {
     background-color: var(--blue);
     color: white;
@@ -53,6 +55,12 @@ button {
     padding-top: 5px;
     padding-bottom: 5px;
     width: fit-content;
+}
+
+a {
+    text-decoration: none;
+    padding-left: 4px;
+    padding-right: 4px;
 }
 
 #credit {
@@ -84,7 +92,7 @@ button {
 }
 
 .dungeon:hover {
-    box-shadow: 3px 3px 30px var(--blue);
+    cursor: pointer
 }
 
 .dungeon h2 {
