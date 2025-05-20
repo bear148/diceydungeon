@@ -9,8 +9,10 @@ export class Enemy {
     }
     
     createEnemy() {
-        this.element = document.createElement("div");
-        this.element.classList.add("enemy");
+        this.element = document.getElementById("enemy-sprite-container")
+        
+        this.element.innerHTML = '';
+
         this.element.innerHTML = `
             <img src="${this.image}" alt="${this.name}">
             <div class="enemy-info">

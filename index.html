@@ -25,9 +25,9 @@
                         <img class="dungeon-icon" src="/assets/crypt.png" alt="Haunted Crypt">
                         <h2>Haunted Crypt</h2>
                     </div>
-                    <div class="dungeon" data-dungeon-id="2" data-dungeon-name="fiery_cave">
-                        <img class="dungeon-icon" src="/assets/cave.png" alt="Fiery Cave">
-                        <h2>Fiery Cave</h2>
+                    <div class="dungeon" data-dungeon-id="2" data-dungeon-name="fury_cave">
+                        <img class="dungeon-icon" src="/assets/cave.png" alt="Fury Cave">
+                        <h2>Fury Cave</h2>
                     </div>
                     <div class="dungeon" data-dungeon-id="3" data-dungeon-name="forsaken_island">
                         <img class="dungeon-icon" src="/assets/island.png" alt="Forsaken Island">
@@ -38,15 +38,29 @@
                         <h2>Temple of Gods</h2>
                     </div>
                 </div>
+                <button id="bindAttacks">Bind Attacks</button>
                 <a href="/index.html">Back</a>
             </div>
             <div id="combat-container" class="hidden">
                 <h1 id="dungeon-title"></h1>
-            </div>
-            <div id="dice-container" class="hidden">
-                
-            </div>
-            <div id="controls" class="hidden">
+                <h2 id="enemy-counter">0/0</h2>
+                <div id="sprite-container">
+                    
+                    <img src="/assets/player.png" id="player-sprite" alt="Player Sprite">
+                    <div id="enemy-sprite-container">
+                        
+                    </div>
+                </div>
+                <div id="dice-container" class="hidden">
+                    <img class="die" src="/assets/dice/1.png" alt="Die">
+                </div>
+                <div id="control-container" class="hidden">
+                    <button id="roll-die">Roll the Dice</button>
+                </div>
+                <div id="info-container" class="hidden">
+                    <h3>Health: <span id="player-health">0</span></h3>
+                    <h3>Mana: <span id="player-mana">0</span></h3>
+                </div>
             </div>
         </div>
         <p id="credit">Made by Michael S.</p>

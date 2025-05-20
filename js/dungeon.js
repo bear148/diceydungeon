@@ -1,7 +1,11 @@
+import { Enemy } from "./enemy.js";
+
 export const dungeon_structs = {
     muddy_swamp: {
         name: "Muddy Swamp",
-        enemies: [],
+        enemies: [
+            new Enemy("Brainlet", 10, 2, 0, 1, "/assets/enemy.png")
+        ],
         loot: [],
     },
     haunted_crypt: {
@@ -9,8 +13,8 @@ export const dungeon_structs = {
         enemies: [],
         loot: [],
     },
-    fiery_cave: {
-        name: "Fiery Cave",
+    fury_cave: {
+        name: "Fury Cave",
         enemies: [],
         loot: [],
     },
