@@ -1,3 +1,5 @@
+import { dungeon_structs } from './dungeon.js';
+
 const GAME_STATE = {
     player_turn: 0,
     enemy_turn: 1,
@@ -16,9 +18,30 @@ export class Game {
     }
 
     init() {
+        let dungeons = document.getElementsByClassName("dungeon");
+        console.log(dungeons);
+        console.log(dungeon_structs[1]);
+
         document.getElementById("start-menu").classList.add("hidden");
         document.getElementById("menu").classList.toggle("hidden");
 
-        console.log("initialize game state")
+        for (let d of dungeons) {
+            d.addEventListener('click', (e) => {
+                console.log(`Dungeon clicked: ${d.attributes[1].value}`);
+                console.log(`Dungeon Struct: ${dungeon_structs[Number(d.attributes[1].value)]}`)
+                this.gameState = GAME_STATE.player_turn;
+                document.getElementById("menu").classList.toggle("hidden");
+                document.getElementById("combat-container").classList.toggle("hidden");
+            });
+        }
+
+        // dungeons.array.forEach(element => {
+        //     element.addEventListener('click', (e) => {
+        //         console.log("Dungeon clicked: " + e.target);
+        //         this.gameState = GAME_STATE.player_turn;
+        //         document.getElementById("menu").classList.toggle("hidden");
+        //         document.getElementById("battle").classList.toggle("hidden");
+        //     });
+        // });
     }
 }

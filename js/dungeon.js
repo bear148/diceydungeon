@@ -1,4 +1,4 @@
-let dungeons = {
+export const dungeon_structs = {
     muddy_swamp: {
         name: "Muddy Swamp",
     },
