@@ -13,35 +13,36 @@ const GAME_STATE = {
 export class Game {
     constructor() {
         this.gameState = GAME_STATE.menu;
+        this.combatContainer = document.getElementById("combat-container");
+        this.menu = document.getElementById("menu");
+        this.startMenu = document.getElementById("start-menu");
+        this.dungeonContainer = document.getElementById("dungeon-container");
+        this.dungeon = null;
 
         this.init();
     }
 
     init() {
         let dungeons = document.getElementsByClassName("dungeon");
-        console.log(dungeons);
-        console.log(dungeon_structs[1]);
 
-        document.getElementById("start-menu").classList.add("hidden");
-        document.getElementById("menu").classList.toggle("hidden");
+        this.startMenu.classList.add("hidden");
+        this.menu.classList.toggle("hidden");
 
         for (let d of dungeons) {
-            d.addEventListener('click', (e) => {
-                console.log(`Dungeon clicked: ${d.attributes[1].value}`);
-                console.log(`Dungeon Struct: ${dungeon_structs[Number(d.attributes[1].value)]}`)
-                this.gameState = GAME_STATE.player_turn;
-                document.getElementById("menu").classList.toggle("hidden");
-                document.getElementById("combat-container").classList.toggle("hidden");
+            d.addEventListener('click', () => {
+                this.selectDungeon(dungeon_structs[d.attributes[2].value]);
             });
         }
+    }
 
-        // dungeons.array.forEach(element => {
-        //     element.addEventListener('click', (e) => {
-        //         console.log("Dungeon clicked: " + e.target);
-        //         this.gameState = GAME_STATE.player_turn;
-        //         document.getElementById("menu").classList.toggle("hidden");
-        //         document.getElementById("battle").classList.toggle("hidden");
-        //     });
-        // });
+    selectDungeon(dungeon) {
+        console.log(`Dungeon selected: ${dungeon.name}`);
+        this.gameState = GAME_STATE.player_turn;
+        this.dungeon = dungeon;
+
+        this.menu.classList.toggle("hidden");
+        this.combatContainer.classList.toggle("hidden");
+
+        this.combatContainer.children[0].innerText = dungeon.name;
     }
 }

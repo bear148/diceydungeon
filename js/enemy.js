@@ -1,0 +1,42 @@
+export class Enemy {
+    constructor(name, health, attack, defense, speed, image) {
+        this.name = name;
+        this.health = health;
+        this.attack = attack;
+        this.defense = defense;
+        this.speed = speed;
+        this.image = image;
+    }
+    
+    createEnemy() {
+        this.element = document.createElement("div");
+        this.element.classList.add("enemy");
+        this.element.innerHTML = `
+            <img src="${this.image}" alt="${this.name}">
+            <div class="enemy-info">
+                <h3>${this.name}</h3>
+                <p>Health: <span class="health">${this.health}</span></p>
+                <p>Attack: ${this.attack}</p>
+                <p>Defense: ${this.defense}</p>
+                <p>Speed: ${this.speed}</p>
+            </div>
+        `;
+    }
+
+    attackEnemy(target) {
+        let damage = Math.max(0, this.attack - target.defense);
+        target.health -= damage;
+        return damage;
+    }
+
+    takeDamage(damage) {
+        this.health -= damage;
+        if (this.health < 0) {
+            this.health = 0;
+        }
+    }
+
+    isDead() {
+        return this.health <= 0;
+    }
+}
