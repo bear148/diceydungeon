@@ -45,8 +45,16 @@
                 <h1 id="dungeon-title"></h1>
                 <h2 id="enemy-counter">0/0</h2>
                 <div id="sprite-container">
-                    
-                    <img src="/assets/player.png" id="player-sprite" alt="Player Sprite">
+                    <div id="player-sprite-container">
+                        <div class="player-info">
+                            <h3>You</h3>
+                            <p>Health: <span id="health">0</span></p>
+                            <p>Attack: 0</p>
+                            <p>Defense: 0</p>
+                            <p>Speed: 0</p>
+                        </div>
+                        <img src="/assets/player.png" id="player-sprite" alt="Player Sprite">
+                    </div>
                     <div id="enemy-sprite-container">
                         
                     </div>
@@ -56,10 +64,6 @@
                 </div>
                 <div id="control-container" class="hidden">
                     <button id="roll-die">Roll the Dice</button>
-                </div>
-                <div id="info-container" class="hidden">
-                    <h3>Health: <span id="player-health">0</span></h3>
-                    <h3>Mana: <span id="player-mana">0</span></h3>
                 </div>
             </div>
         </div>

@@ -160,6 +160,7 @@ img {
     height: 256px;
 }
 
+#player-sprite-container,
 #enemy-sprite-container {
     display: flex;
     justify-content: center;
@@ -184,11 +185,13 @@ img {
     width: 64px;
 }
 
+.player-info *,
 .enemy-info * {
     margin: 0;
     padding: 0;
 }
 
+.player-info,
 .enemy-info {
     padding: 10px;
     border: 1px white dashed;
@@ -202,9 +205,17 @@ img {
 
 #info-container {
     display: flex;
-    width: 90%;
+    width: fit-content;
+    align-self: flex-start;
+    background-color: gray;
+    padding: 10px;
 }
 
 #info-container h3:first-child {
     margin-right: 25px;
+}
+
+#bindAttacks {
+    margin-top: 25px;
+    margin-bottom: 10px;
 }

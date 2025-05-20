@@ -27,7 +27,6 @@ export class Game {
         this.dungeonContainer = document.getElementById("dungeon-container");
         this.diceContainer = document.getElementById("dice-container");
         this.controlContainer = document.getElementById("control-container");
-        this.infoContainer = document.getElementById("info-container");
 
         this.diceController = new Dice(this.diceContainer);
 
@@ -51,8 +50,10 @@ export class Game {
 
         this.controlContainer.children[0].addEventListener("click", () => {
             if (this.gameState != GAME_STATE.player_turn) return;
+            
             this.currentRoll = this.diceController.roll();
             this.gameState = GAME_STATE.enemy_turn;
+
             this.controlContainer.classList.toggle("hidden");
         });
     }
@@ -66,7 +67,6 @@ export class Game {
         this.combatContainer.classList.toggle("hidden");
         this.diceContainer.classList.toggle("hidden");
         this.controlContainer.classList.toggle("hidden");
-        this.infoContainer.classList.toggle("hidden");
 
         this.combatContainer.children[0].innerText = dungeon.name;
         this.combatContainer.children[1].innerText = `0/${dungeon.enemies.length}`;
