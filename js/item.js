@@ -1,11 +1,11 @@
 import { ITEM_TYPE, RARITY } from "./enums.js";
-import { getRandomInt } from "./util.js";
+import { getRandomInt, getRandomWeaponImage } from "./util.js";
 
 export class Item {
-    constructor(name, type, icon) {
+    constructor(name, type) {
         this.name = name;
         this.type = type;
-        this.icon = icon;
+        this.icon = getRandomWeaponImage();
         this.rarity = this.getRandomRarity();
         this.stats = [];
 
@@ -31,7 +31,7 @@ export class Item {
     }
 
     getRandomRarity() {
-        let rng = getRandomInt(0, 100);
+        let rng = getRandomInt(0, 101);
 
         if (rng <= 50) {
             return RARITY.common;

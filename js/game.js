@@ -34,6 +34,7 @@ export class Game {
         this.diceContainer = document.getElementById("dice-container");
         this.controlContainer = document.getElementById("control-container");
         this.settings = ["even", "odd"]; // attack, defense
+        this.inventoryContainer = document.getElementById("inventory-container");
 
         this.diceController = new Dice(this.diceContainer);
 
@@ -69,11 +70,6 @@ export class Game {
             document.getElementById("settings-container").classList.toggle("hidden");
         });
 
-        document.getElementById("backToDungeonSelect").addEventListener("click", () => {
-            this.menu.classList.toggle("hidden");
-            document.getElementById("settings-container").classList.toggle("hidden");
-        });
-
         document.getElementById("attack-settings").addEventListener("change", () => {
             this.settings[0] = document.getElementById("attack-settings").value;
         });
@@ -82,13 +78,24 @@ export class Game {
             this.settings[1] = document.getElementById("defense-settings").value;
         });
 
-        console.log(document.getElementsByClassName("restartGame"));
+        document.getElementById("inventoryGo").addEventListener("click", () => {
+            this.menu.classList.toggle("hidden");
+            this.inventoryContainer.classList.toggle("hidden");
+        });
+
         for (const element of document.getElementsByClassName("restartGame")) {
             element.addEventListener("click", () => {
                 this.dungeon = null;
                 this.dungeonEnemy = 0;
                 this.gameState = GAME_STATE.menu;
 
+                this.menu.classList.toggle("hidden");
+                element.parentElement.classList.toggle("hidden");
+            });
+        }
+
+        for (const element of document.getElementsByClassName("backToDungeonSelect")) {
+            element.addEventListener("click", () => {
                 this.menu.classList.toggle("hidden");
                 element.parentElement.classList.toggle("hidden");
             });
