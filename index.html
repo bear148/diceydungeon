@@ -16,7 +16,7 @@
         <div id="game-container">
             <div id="menu" class="hidden">
                 <h1>Pick A Dungeon</h1>
-                <div id="dungeon-container">
+                <div id="dungeon-container" class="hidden">
                     <div class="dungeon" data-dungeon-id="0" data-dungeon-name="muddy_swamp">
                         <img class="dungeon-icon" src="/assets/swamp.png" alt="Muddy Swamp">
                         <h2>Muddy Swamp</h2>
@@ -49,9 +49,8 @@
                         <div class="player-info">
                             <h3>You</h3>
                             <p>Health: <span id="health">0</span></p>
-                            <p>Attack: 0</p>
-                            <p>Defense: 0</p>
-                            <p>Speed: 0</p>
+                            <p>Attack: <span id="attack">0</span></p>
+                            <p>Defense: <span id="defense">0</span></p>
                         </div>
                         <img src="/assets/player.png" id="player-sprite" alt="Player Sprite">
                     </div>
@@ -65,6 +64,25 @@
                 <div id="control-container" class="hidden">
                     <button id="roll-die">Roll the Dice</button>
                 </div>
+            </div>
+            <div id="settings-container" class="hidden">
+                <h1>Settings</h1>
+                <label for="attacks">Bind Your Primary Attack:</label>
+                <select id="attack-settings" name="attacks">
+                    <option value="even">Even</option>
+                    <option value="odd">Odd</option>
+                </select>
+                <label for="defense">Bind Your Primary Defense:</label>
+                <select id="defense-settings" name="defense">
+                    <option value="odd">Odd</option>
+                    <option value="even">Even</option>
+                </select>
+                <button id="backToDungeonSelect">Back</button>
+            </div>
+            <div id="game-over-container" class="hidden">
+                <h1>Game Over</h1>
+                <p id="game-over-message">You have been defeated!</p>
+                <button id="restartGame">Restart Game</button>
             </div>
         </div>
         <p id="credit">Made by Michael S.</p>

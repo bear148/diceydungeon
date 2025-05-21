@@ -219,3 +219,18 @@ img {
     margin-top: 25px;
     margin-bottom: 10px;
 }
+
+#settings-container {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+#settings-container button {
+    margin-top: 10px;
+}
+
+.boss {
+    color: red;
+}

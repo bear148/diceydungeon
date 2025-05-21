@@ -11,11 +11,17 @@ export const GAME_STATE = {
     buffer_state: 6,
 }
 
-const PLAYER = {
+let PLAYER = {
+    name: "Player",
     health: 100,
     coins: 10,
+    attack: 5,
+    defense: 0,
+    speed: 1,
     skills: [],
-    inventory: []
+    inventory: [],
+    blocking: false,
+    isDead: false,
 }
 
 export class Game {
@@ -27,6 +33,7 @@ export class Game {
         this.dungeonContainer = document.getElementById("dungeon-container");
         this.diceContainer = document.getElementById("dice-container");
         this.controlContainer = document.getElementById("control-container");
+        this.settings = ["even", "odd"]; // attack, defense
 
         this.diceController = new Dice(this.diceContainer);
 
@@ -41,6 +48,7 @@ export class Game {
 
         this.startMenu.classList.add("hidden");
         this.menu.classList.toggle("hidden");
+        this.dungeonContainer.classList.toggle("hidden");
 
         for (let d of dungeons) {
             d.addEventListener('click', () => {
@@ -49,13 +57,34 @@ export class Game {
         }
 
         this.controlContainer.children[0].addEventListener("click", () => {
+            console.log("Attack button clicked");
             if (this.gameState != GAME_STATE.player_turn) return;
-            
             this.currentRoll = this.diceController.roll();
-            this.gameState = GAME_STATE.enemy_turn;
-
+            this.handleRoll(this.currentRoll);
             this.controlContainer.classList.toggle("hidden");
         });
+
+        document.getElementById("bindAttacks").addEventListener("click", () => {
+            this.menu.classList.toggle("hidden");
+            document.getElementById("settings-container").classList.toggle("hidden");
+        });
+
+        document.getElementById("backToDungeonSelect").addEventListener("click", () => {
+            this.menu.classList.toggle("hidden");
+            document.getElementById("settings-container").classList.toggle("hidden");
+        });
+
+        document.getElementById("attack-settings").addEventListener("change", () => {
+            this.settings[0] = document.getElementById("attack-settings").value;
+        });
+
+        document.getElementById("defense-settings").addEventListener("change", () => {
+            this.settings[1] = document.getElementById("defense-settings").value;
+        });
+
+        document.getElementById("attack").innerText = PLAYER.attack;
+        document.getElementById("defense").innerText = PLAYER.defense;
+        document.getElementById("health").innerText = PLAYER.health;
     }
 
     selectDungeon(dungeon) {
@@ -90,6 +119,71 @@ export class Game {
             default:
                 break;
         }
+    }
+
+    handleRoll(roll) {
+        if ((roll % 2 == 0 && this.settings[0] == "even") || (roll % 2 != 0 && this.settings[0] == "odd")) {
+            console.log("Attack successful!");
+            this.dungeon.enemies[this.dungeonEnemy].takeDamage(PLAYER.attack);
+        } else if ((roll % 2 != 0 && this.settings[1] == "odd") || (roll % 2 == 0 && this.settings[1] == "even")) {
+            console.log("Defense successful!");
+            PLAYER.blocking = true;
+        }
+
+        this.GAME_STATE = GAME_STATE.enemy_turn;
+
+        if (this.dungeon.enemies[this.dungeonEnemy].health <= 0) {
+            this.dungeonEnemy++;
+            this.combatContainer.children[1].innerText = `${this.dungeonEnemy}/${this.dungeon.enemies.length}`;
+            if (this.dungeonEnemy >= this.dungeon.enemies.length) {
+                this.gameState = GAME_STATE.battle_end;
+                this.triggerBattleEnd();
+                console.log("Battle ended!");
+            } else {
+                this.dungeon.enemies[this.dungeonEnemy].createEnemy();
+                this.gameState = GAME_STATE.player_turn;
+                this.showPlayerControls();
+            }
+        } else {
+            console.log("Enemy turn!");
+            if (!this.blocking) {
+                let attack = this.dungeon.enemies[this.dungeonEnemy].attackEnemy(PLAYER);
+
+                if (!attack) {
+                    PLAYER.isDead = true;
+                    this.triggerGameOver();
+                }
+            }
+            this.gameState = GAME_STATE.player_turn;
+            PLAYER.blocking = false;
+            this.showPlayerControls();
+        }
+    }
+
+    triggerBattleEnd() {
+        this.combatContainer.classList.toggle("hidden");
+        this.diceContainer.classList.toggle("hidden");
+        this.controlContainer.classList.toggle("hidden");
+        // this.dungeonContainer.classList.toggle("hidden");
+        this.menu.classList.toggle("hidden");
+
+        this.gameState = GAME_STATE.menu;
+    }
+
+    triggerGameOver() {
+        this.combatContainer.classList.toggle("hidden");
+        this.diceContainer.classList.toggle("hidden");
+        this.controlContainer.classList.toggle("hidden");
+
+        document.getElementById("game-over-container").classList.toggle("hidden");
+    }
+
+    showPlayerControls() {
+        this.controlContainer.classList.toggle("hidden");
+    }
+
+    hidePlayerControls() {
+        this.controlContainer.classList.toggle("hidden");
     }
 
     getGameState() {
