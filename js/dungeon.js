@@ -1,14 +1,20 @@
 import { Enemy } from "./enemy.js";
+import { ITEM_TYPE } from "./enums.js";
+import { Item } from "./item.js";
 
 export const dungeon_structs = {
     muddy_swamp: {
         name: "Muddy Swamp",
         enemies: [
             new Enemy("Brainlet", 10, 2, 0, 1, "/assets/enemy.png"),
-            new Enemy("Goblin", 20, 3, 1, 2, "/assets/goblin.png"),
+            new Enemy("Brainlet", 15, 2, 0, 1, "/assets/goblin.png"),
+            new Enemy("Brainlet", 10, 2, 0, 1, "/assets/enemy2.png"),
+            new Enemy("Brainlet", 15, 2, 0, 1, "/assets/goblin.png"),
             new Enemy("Skeleton", 30, 4, 2, 3, "/assets/skeleton.png", true),
         ],
-        loot: [],
+        loot_table: [
+            new Item("Sword", ITEM_TYPE.weapon, null)
+        ],
     },
     haunted_crypt: {
         name: "Haunted Crypt",

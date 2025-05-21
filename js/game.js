@@ -82,6 +82,18 @@ export class Game {
             this.settings[1] = document.getElementById("defense-settings").value;
         });
 
+        console.log(document.getElementsByClassName("restartGame"));
+        for (const element of document.getElementsByClassName("restartGame")) {
+            element.addEventListener("click", () => {
+                this.dungeon = null;
+                this.dungeonEnemy = 0;
+                this.gameState = GAME_STATE.menu;
+
+                this.menu.classList.toggle("hidden");
+                element.parentElement.classList.toggle("hidden");
+            });
+        }
+
         document.getElementById("attack").innerText = PLAYER.attack;
         document.getElementById("defense").innerText = PLAYER.defense;
         document.getElementById("health").innerText = PLAYER.health;
@@ -109,18 +121,6 @@ export class Game {
         dungeon.enemies[0].createEnemy();
     }
 
-    updateGameState(state) {
-        this.gameState = state;
-
-        switch(this.gameState) {
-            case GAME_STATE.player_turn:
-                this.controlContainer.children[0].classList.toggle("hidden");
-                break;
-            default:
-                break;
-        }
-    }
-
     handleRoll(roll) {
         if ((roll % 2 == 0 && this.settings[0] == "even") || (roll % 2 != 0 && this.settings[0] == "odd")) {
             console.log("Attack successful!");
@@ -137,7 +137,7 @@ export class Game {
             this.combatContainer.children[1].innerText = `${this.dungeonEnemy}/${this.dungeon.enemies.length}`;
             if (this.dungeonEnemy >= this.dungeon.enemies.length) {
                 this.gameState = GAME_STATE.battle_end;
-                this.triggerBattleEnd();
+                this.triggerDungeonWin();
                 console.log("Battle ended!");
             } else {
                 this.dungeon.enemies[this.dungeonEnemy].createEnemy();
@@ -146,7 +146,7 @@ export class Game {
             }
         } else {
             console.log("Enemy turn!");
-            if (!this.blocking) {
+            if (!PLAYER.blocking) {
                 let attack = this.dungeon.enemies[this.dungeonEnemy].attackEnemy(PLAYER);
 
                 if (!attack) {
@@ -160,7 +160,7 @@ export class Game {
         }
     }
 
-    triggerBattleEnd() {
+    goBackToDungeonMenu() {
         this.combatContainer.classList.toggle("hidden");
         this.diceContainer.classList.toggle("hidden");
         this.controlContainer.classList.toggle("hidden");
@@ -176,6 +176,16 @@ export class Game {
         this.controlContainer.classList.toggle("hidden");
 
         document.getElementById("game-over-container").classList.toggle("hidden");
+    }
+
+    triggerDungeonWin() {
+        this.combatContainer.classList.toggle("hidden");
+        this.diceContainer.classList.toggle("hidden");
+        this.controlContainer.classList.toggle("hidden");
+
+        console.log(this.dungeon.loot_table[0].generate());
+
+        document.getElementById("dungeon-over-container").classList.toggle("hidden");
     }
 
     showPlayerControls() {

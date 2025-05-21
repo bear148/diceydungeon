@@ -170,6 +170,7 @@ img {
 
 #enemy-sprite-container img {
     width: 50%;
+    transform: scaleX(-1);
 }
 
 #dice-container {

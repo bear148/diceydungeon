@@ -65,6 +65,9 @@
                     <button id="roll-die">Roll the Dice</button>
                 </div>
             </div>
+            <div id="inventory-container" class="hidden">
+                <h1>Inventory</h1>
+            </div>
             <div id="settings-container" class="hidden">
                 <h1>Settings</h1>
                 <label for="attacks">Bind Your Primary Attack:</label>
@@ -82,7 +85,12 @@
             <div id="game-over-container" class="hidden">
                 <h1>Game Over</h1>
                 <p id="game-over-message">You have been defeated!</p>
-                <button id="restartGame">Restart Game</button>
+                <button class="restartGame">Restart Game</button>
+            </div>
+            <div id="dungeon-over-container" class="hidden">
+                <h1>Dungeon Completed!</h1>
+                <p id="dungeon-over-message">You have defeated all the dungeon monsters!</p>
+                <button class="restartGame">Restart Game</button>
             </div>
         </div>
         <p id="credit">Made by Michael S.</p>
