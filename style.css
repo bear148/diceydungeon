@@ -14,9 +14,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction:  column;
+    flex-direction: column;
     flex-wrap: nowrap;
-    background-image: linear-gradient(to top right, rgb(0,0,0), rgb(24, 24, 24));
+    background-image: linear-gradient(to top right, rgb(0, 0, 0), rgb(24, 24, 24));
     background-repeat: no-repeat;
     background-size: contain;
     height: 100%;
@@ -239,4 +239,28 @@ img {
 
 #inventoryGo {
     margin-bottom: 10px;
+}
+
+#inventory-grid {
+    display: grid;
+    grid-template-rows: repeat(5, 60px);
+    grid-template-columns: repeat(12, 60px);
+    gap: 1px;
+    /* no gap between cells, adjust if needed */
+    width: max-content;
+    /* shrink-wrap to grid size */
+    border: 1px solid #ccc;
+    /* optional, just to see the container */
+}
+
+.grid-item {
+    width: 60px;
+    height: 60px;
+    border: 1px solid #ccc;
+    /* cell borders */
+    box-sizing: border-box;
+}
+
+.grid-item.dragging {
+    opacity: 0.5;
 }

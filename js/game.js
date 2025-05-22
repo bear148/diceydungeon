@@ -1,5 +1,6 @@
 import { Dice } from './dice.js';
 import { dungeon_structs } from './dungeon.js';
+import { Inventory } from './inventory.js';
 
 export const GAME_STATE = {
     player_turn: 0,
@@ -37,6 +38,7 @@ export class Game {
         this.inventoryContainer = document.getElementById("inventory-container");
 
         this.diceController = new Dice(this.diceContainer);
+        this.Inventory = new Inventory(this.inventoryContainer);
 
         this.dungeon = null;
         this.dungeonEnemy = 0;
