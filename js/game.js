@@ -1,6 +1,9 @@
 import { Dice } from './dice.js';
 import { dungeon_structs } from './dungeon.js';
 import { Inventory } from './inventory.js';
+import { Item } from './item.js';
+import { ITEM_TYPE } from './enums.js';
+import { RNG } from './util.js';
 
 export const GAME_STATE = {
     player_turn: 0,
@@ -12,7 +15,7 @@ export const GAME_STATE = {
     buffer_state: 6,
 }
 
-let PLAYER = {
+export let PLAYER = {
     name: "Player",
     health: 100,
     coins: 10,
@@ -23,6 +26,13 @@ let PLAYER = {
     inventory: [],
     blocking: false,
     isDead: false,
+    armor: {
+        helment: null,
+        chestplace: null,
+        legs: null,
+        boots: null,
+        gloves: null,
+    }
 }
 
 export class Game {
@@ -36,9 +46,10 @@ export class Game {
         this.controlContainer = document.getElementById("control-container");
         this.settings = ["even", "odd"]; // attack, defense
         this.inventoryContainer = document.getElementById("inventory-container");
+        this.inventoryGrid = document.getElementById("inventory-grid");
 
         this.diceController = new Dice(this.diceContainer);
-        this.Inventory = new Inventory(this.inventoryContainer);
+        this.Inventory = new Inventory(this.inventoryGrid);
 
         this.dungeon = null;
         this.dungeonEnemy = 0;
@@ -60,7 +71,6 @@ export class Game {
         }
 
         this.controlContainer.children[0].addEventListener("click", () => {
-            console.log("Attack button clicked");
             if (this.gameState != GAME_STATE.player_turn) return;
             this.currentRoll = this.diceController.roll();
             this.handleRoll(this.currentRoll);
@@ -103,39 +113,36 @@ export class Game {
             });
         }
 
-        document.getElementById("attack").innerText = PLAYER.attack;
-        document.getElementById("defense").innerText = PLAYER.defense;
-        document.getElementById("health").innerText = PLAYER.health;
+        this.refreshPlayerStats();
     }
 
     selectDungeon(dungeon) {
-        console.log(`Dungeon selected: ${dungeon.name}`);
+        this.refreshPlayerStats();
         this.gameState = GAME_STATE.player_turn;
         this.dungeon = dungeon;
-
-        this.menu.classList.toggle("hidden");
-        this.combatContainer.classList.toggle("hidden");
-        this.diceContainer.classList.toggle("hidden");
-        this.controlContainer.classList.toggle("hidden");
-
+    
+        // Ensure correct visibility
+        this.menu.classList.add("hidden");
+    
+        this.combatContainer.classList.remove("hidden");
+        this.diceContainer.classList.remove("hidden");
+        this.controlContainer.classList.remove("hidden");
+    
         this.combatContainer.children[0].innerText = dungeon.name;
         this.combatContainer.children[1].innerText = `0/${dungeon.enemies.length}`;
-
+    
         this.buildDungeon(dungeon);
     }
 
     buildDungeon(dungeon) {
-        console.log("Building dungeon: " + dungeon);
-
+        this.gameState = GAME_STATE.player_turn;
         dungeon.enemies[0].createEnemy();
     }
 
     handleRoll(roll) {
         if ((roll % 2 == 0 && this.settings[0] == "even") || (roll % 2 != 0 && this.settings[0] == "odd")) {
-            console.log("Attack successful!");
             this.dungeon.enemies[this.dungeonEnemy].takeDamage(PLAYER.attack);
         } else if ((roll % 2 != 0 && this.settings[1] == "odd") || (roll % 2 == 0 && this.settings[1] == "even")) {
-            console.log("Defense successful!");
             PLAYER.blocking = true;
         }
 
@@ -156,9 +163,9 @@ export class Game {
         } else {
             console.log("Enemy turn!");
             if (!PLAYER.blocking) {
-                let attack = this.dungeon.enemies[this.dungeonEnemy].attackEnemy(PLAYER);
+                this.dungeon.enemies[this.dungeonEnemy].attackEnemy(PLAYER);
 
-                if (!attack) {
+                if (PLAYER.health <= 0) {
                     PLAYER.isDead = true;
                     this.triggerGameOver();
                 }
@@ -180,21 +187,30 @@ export class Game {
     }
 
     triggerGameOver() {
-        this.combatContainer.classList.toggle("hidden");
-        this.diceContainer.classList.toggle("hidden");
-        this.controlContainer.classList.toggle("hidden");
-
-        document.getElementById("game-over-container").classList.toggle("hidden");
+        this.combatContainer.classList.add("hidden");
+        this.diceContainer.classList.add("hidden");
+        this.controlContainer.classList.add("hidden");
+    
+        document.getElementById("game-over-container").classList.remove("hidden");
     }
 
     triggerDungeonWin() {
-        this.combatContainer.classList.toggle("hidden");
-        this.diceContainer.classList.toggle("hidden");
-        this.controlContainer.classList.toggle("hidden");
+        if (RNG(75)) {
+            let pot = new Item("Healing Potion", ITEM_TYPE.potion).generate();
+            this.Inventory.addItem(pot);
+            PLAYER.inventory.push(pot);
+        }
 
-        console.log(this.dungeon.loot_table[0].generate());
+        let drop = RNG(50) ? new Item("Sword", ITEM_TYPE.weapon).generate() : new Item("Armor", ITEM_TYPE.armor).generate();
 
-        document.getElementById("dungeon-over-container").classList.toggle("hidden");
+        this.combatContainer.classList.add("hidden");
+        this.diceContainer.classList.add("hidden");
+        this.controlContainer.classList.add("hidden");
+    
+        this.Inventory.addItem(drop);
+        PLAYER.inventory.push(drop);
+    
+        document.getElementById("dungeon-over-container").classList.remove("hidden");
     }
 
     showPlayerControls() {
@@ -207,5 +223,11 @@ export class Game {
 
     getGameState() {
         return this.gameState;
+    }
+
+    refreshPlayerStats() {
+        document.getElementById("attack").innerText = PLAYER.attack;
+        document.getElementById("defense").innerText = PLAYER.defense;
+        document.getElementById("health").innerText = PLAYER.health;
     }
 }

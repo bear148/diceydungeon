@@ -7,9 +7,9 @@ export const dungeon_structs = {
         name: "Muddy Swamp",
         enemies: [
             new Enemy("Brainlet", 10, 2, 0, 1, "/assets/enemy.png"),
-            new Enemy("Brainlet", 15, 2, 0, 1, "/assets/goblin.png"),
-            new Enemy("Brainlet", 10, 2, 0, 1, "/assets/enemy2.png"),
-            new Enemy("Brainlet", 15, 2, 0, 1, "/assets/goblin.png"),
+            new Enemy("Plughead", 15, 2, 0, 1, "/assets/goblin.png"),
+            new Enemy("Molecule Brain", 10, 2, 0, 1, "/assets/enemy2.png"),
+            new Enemy("Plughead", 15, 2, 0, 1, "/assets/goblin.png"),
             new Enemy("Skeleton", 30, 4, 2, 3, "/assets/skeleton.png", true),
         ],
         loot_table: [

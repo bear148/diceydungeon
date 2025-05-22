@@ -1,6 +1,7 @@
 export const ITEM_TYPE = {
     weapon: 1,
     armor: 2,
+    potion: 3,
 }
 
 export const RARITY = {

@@ -251,6 +251,7 @@ img {
     /* shrink-wrap to grid size */
     border: 1px solid #ccc;
     /* optional, just to see the container */
+    margin-bottom: 10px;
 }
 
 .grid-item {
@@ -259,8 +260,89 @@ img {
     border: 1px solid #ccc;
     /* cell borders */
     box-sizing: border-box;
+    image-rendering: pixelated;
 }
 
 .grid-item.dragging {
     opacity: 0.5;
+}
+
+#tooltip {
+    position: fixed;
+    background: #333;
+    color: #fff;
+    font-size: 14px;
+    pointer-events: none;
+    z-index: 1000;
+    max-width: fit-content;
+    outline: 3px solid #333;
+    border: 1px dashed gold;
+}
+
+#tooltip p {
+    padding: 3px;
+    margin: 0;
+}
+
+.item-rarity::first-letter {
+    text-transform: uppercase;
+}
+
+.common {
+    color: rgb(158, 158, 158);
+}
+
+.uncommon {
+    color: rgb(0, 255, 8);
+}
+
+.rare {
+    color: rgb(17, 0, 255);
+}
+
+.epic {
+    color: rgb(125, 0, 187);
+}
+
+.legendary {
+    color: rgb(255, 217, 0);
+}
+
+.exalted {
+    color: rgb(255, 250, 220);
+}
+
+.tip {
+    color: gold;
+    padding: 0;
+    margin: 0;
+}
+
+.tip::before {
+    content: "Tip: ";
+}
+
+#item-menu {
+    position: fixed;
+    color: white;
+    border-radius: 5px;
+    padding: 6px 10px;
+    z-index: 2000;
+}
+
+.hidden {
+    display: none;
+}
+
+#use-item {
+    cursor: pointer;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    color: white;
+}
+
+#use-item:hover {
+    box-shadow: none;
+    background: #bbb;
 }

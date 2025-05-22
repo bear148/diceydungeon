@@ -1,5 +1,9 @@
+import { getRandomInt } from "./util.js";
+
 export class Enemy {
     constructor(name, health, attack, defense, speed, image, boss=false) {
+        this.startingHealth = health;
+
         this.name = name;
         this.health = health;
         this.attack = attack;
@@ -11,7 +15,7 @@ export class Enemy {
     
     createEnemy() {
         this.element = document.getElementById("enemy-sprite-container")
-        
+        this.health = this.startingHealth;
         this.element.innerHTML = '';
 
         if (!this.boss) {
@@ -40,15 +44,11 @@ export class Enemy {
     }
 
     attackEnemy(target) {
-        let damage = Math.max(0, this.attack - target.defense);
+        let damage = getRandomInt(0, this.attack - target.defense);
 
         console.log(`${this.name} attacks ${target.name} for ${damage} damage!`);
-        target.health -= (damage - target.defense);
+        target.health -= (damage);
         document.getElementById("health").innerText = target.health;
-
-        if (target.health <= 0) {
-            return false;
-        }
 
         return damage;
     }

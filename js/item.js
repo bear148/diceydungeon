@@ -1,12 +1,21 @@
 import { ITEM_TYPE, RARITY } from "./enums.js";
-import { getRandomInt, getRandomWeaponImage } from "./util.js";
+import { getRandomInt, getRandomWeaponImage, getRandomArmorImage } from "./util.js";
 
 export class Item {
     constructor(name, type) {
         this.name = name;
         this.type = type;
-        this.icon = getRandomWeaponImage();
-        this.rarity = this.getRandomRarity();
+        this.rarityID = this.getRandomRarity();
+
+        if (type == ITEM_TYPE.weapon) {
+            this.icon = getRandomWeaponImage();
+        } else if (type == ITEM_TYPE.armor) {
+            this.icon = getRandomArmorImage();
+        } else {    
+            this.icon = "/assets/heal.png";
+            this.rarityID = RARITY.common;
+        }
+        
         this.stats = [];
 
         this.generateStats();
@@ -17,15 +26,34 @@ export class Item {
             name: this.name,
             type: this.type,
             icon: this.icon,
-            rarity: this.rarity,
+            rarity: {
+                rarityID: this.rarityID,
+                rarityName: this.getRarityTitle(),
+            },
             stats: this.stats
         }
     }
 
     generateStats() {
-        if (this.type == ITEM_TYPE.weapon) {
-            this.stats = {
-                damage: getRandomInt(1, 8) * this.rarity,
+        switch (this.type) {
+            case ITEM_TYPE.weapon:
+                this.stats = {
+                    type: "Damage",
+                    amount: getRandomInt(1, 8) * this.rarityID,
+                }
+                break;
+            case ITEM_TYPE.potion: {
+                this.stats = {
+                    type: "Healing",
+                    amount: 20,
+                }
+                break;
+            }
+            case ITEM_TYPE.armor: {
+                this.stats = {
+                    type: "Defense",
+                    amount: getRandomInt(5, 10) * this.rarityID,
+                }
             }
         }
     }
@@ -45,6 +73,25 @@ export class Item {
             return RARITY.legendary;
         } else {
             return RARITY.exalted;
+        }
+    }
+
+    getRarityTitle() {
+        switch(this.rarityID) {
+            case 1:
+                return "common";
+            case 2:
+                return "uncommon";
+            case 3:
+                return "rare";
+            case 4:
+                return "epic";
+            case 5:
+                return "legendary";
+            case 6:
+                return "exalted";
+            default:
+                return "programmer sux lol";
         }
     }
 }

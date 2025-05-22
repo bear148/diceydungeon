@@ -1,0 +1,1 @@
+$i = 1 ; gci "./" | rni $_ -newname ("armor" + $i + ".png") ; $i++
