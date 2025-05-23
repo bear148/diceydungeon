@@ -27,12 +27,12 @@ export let PLAYER = {
     blocking: false,
     isDead: false,
     armor: {
-        helment: null,
-        chestplace: null,
-        legs: null,
+        head: null,
+        chest: null,
         boots: null,
         gloves: null,
-    }
+    },
+    hand: null,
 }
 
 export class Game {
@@ -162,14 +162,14 @@ export class Game {
             }
         } else {
             console.log("Enemy turn!");
-            if (!PLAYER.blocking) {
-                this.dungeon.enemies[this.dungeonEnemy].attackEnemy(PLAYER);
+            // if (!PLAYER.blocking) {
+            //     this.dungeon.enemies[this.dungeonEnemy].attackEnemy(PLAYER);
 
-                if (PLAYER.health <= 0) {
-                    PLAYER.isDead = true;
-                    this.triggerGameOver();
-                }
-            }
+            //     if (PLAYER.health <= 0) {
+            //         PLAYER.isDead = true;
+            //         this.triggerGameOver();
+            //     }
+            // }
             this.gameState = GAME_STATE.player_turn;
             PLAYER.blocking = false;
             this.showPlayerControls();
@@ -196,12 +196,12 @@ export class Game {
 
     triggerDungeonWin() {
         if (RNG(75)) {
-            let pot = new Item("Healing Potion", ITEM_TYPE.potion).generate();
+            let pot = new Item(ITEM_TYPE.potion).generate();
             this.Inventory.addItem(pot);
             PLAYER.inventory.push(pot);
         }
 
-        let drop = RNG(50) ? new Item("Sword", ITEM_TYPE.weapon).generate() : new Item("Armor", ITEM_TYPE.armor).generate();
+        let drop = RNG(50) ? new Item(ITEM_TYPE.weapon).generate() : new Item(ITEM_TYPE.armor).generate();
 
         this.combatContainer.classList.add("hidden");
         this.diceContainer.classList.add("hidden");
@@ -209,6 +209,8 @@ export class Game {
     
         this.Inventory.addItem(drop);
         PLAYER.inventory.push(drop);
+
+        console.log("drop notif: ", drop);
     
         document.getElementById("dungeon-over-container").classList.remove("hidden");
     }

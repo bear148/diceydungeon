@@ -12,28 +12,21 @@ export const dungeon_structs = {
             new Enemy("Plughead", 15, 2, 0, 1, "/assets/goblin.png"),
             new Enemy("Skeleton", 30, 4, 2, 3, "/assets/skeleton.png", true),
         ],
-        loot_table: [
-            new Item("Sword", ITEM_TYPE.weapon, null)
-        ],
     },
     haunted_crypt: {
         name: "Haunted Crypt",
         enemies: [],
-        loot: [],
     },
     fury_cave: {
         name: "Fury Cave",
         enemies: [],
-        loot: [],
     },
     forsaken_island: {
         name: "Forsaken Island",
         enemies: [],
-        loot: [],
     },
     temple_of_gods: {
         name: "Temple of Gods",
         enemies: [],
-        loot: [],
     }
 }

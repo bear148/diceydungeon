@@ -1,3 +1,5 @@
+import { ARMOR_TYPE } from "./enums.js";
+
 const tooltip = document.getElementById("tooltip");
 
 export function getRandomInt(min, max) {
@@ -20,10 +22,34 @@ export function getRandomWeaponImage() {
 	return weapons[Math.floor(Math.random() * weapons.length)];
 }
 
-export function getRandomArmorImage() {
-	const armor = Array.from({ length: 30 }, (_, i) => `/assets/armor/armor${i + 1}.png`);
+export function getRandomArmorType() {
+	const types = [
+		ARMOR_TYPE.head,
+		ARMOR_TYPE.chest,
+		ARMOR_TYPE.boots,
+		ARMOR_TYPE.gloves,
+	];
 
-	return armor[Math.floor(Math.random() * armor.length)];
+	return types[Math.floor(Math.random() * types.length)];
+}
+
+export function getRandomArmorImage(type) {
+	switch (type) {
+		case ARMOR_TYPE.head:
+			const head = Array.from({ length: 7 }, (_, i) => `/assets/armor/head${i + 1}.png`);
+			return head[Math.floor(Math.random() * head.length)];
+		case ARMOR_TYPE.chest:
+			const chest = Array.from({ length: 12 }, (_, i) => `/assets/armor/chest${i + 1}.png`);
+			return chest[Math.floor(Math.random() * chest.length)];
+		case ARMOR_TYPE.boots:
+			const boots = Array.from({ length: 4 }, (_, i) => `/assets/armor/boots${i + 1}.png`);
+			return boots[Math.floor(Math.random() * boots.length)];
+		case ARMOR_TYPE.gloves:
+			const gloves = Array.from({ length: 4 }, (_, i) => `/assets/armor/gloves${i + 1}.png`);
+			return gloves[Math.floor(Math.random() * gloves.length)];
+		default:
+			return "/assets/err.png";
+	}
 }
 
 export function showTooltip(content, x, y) {
@@ -37,12 +63,21 @@ export function hideTooltip() {
 	tooltip.classList.add("hidden");
 }
 
-export function contentGenerator(item) {
-	return `
-
-`;
-}
-
 export function RNG(chance) {
 	return (getRandomInt(0, 101) <= chance);
+}
+
+export function formalArmorName(type) {
+	switch (type) {
+		case ARMOR_TYPE.head:
+			return "Head";
+		case ARMOR_TYPE.chest:
+			return "Chest";
+		case ARMOR_TYPE.boots:
+			return "Boots";
+		case ARMOR_TYPE.gloves:
+			return "Gloves";
+		default:
+			return "Unknown";
+	}
 }

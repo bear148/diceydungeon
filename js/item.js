@@ -1,17 +1,20 @@
 import { ITEM_TYPE, RARITY } from "./enums.js";
-import { getRandomInt, getRandomWeaponImage, getRandomArmorImage } from "./util.js";
+import { getRandomInt, getRandomWeaponImage, getRandomArmorImage, getRandomArmorType, formalArmorName } from "./util.js";
 
 export class Item {
-    constructor(name, type) {
-        this.name = name;
+    constructor(type) {
         this.type = type;
         this.rarityID = this.getRandomRarity();
 
         if (type == ITEM_TYPE.weapon) {
+            this.name = "Weapon";
             this.icon = getRandomWeaponImage();
         } else if (type == ITEM_TYPE.armor) {
-            this.icon = getRandomArmorImage();
-        } else {    
+            this.armorType = getRandomArmorType();
+            this.name = formalArmorName(this.armorType);
+            this.icon = getRandomArmorImage(this.armorType);
+        } else {
+            this.name = "Potion";
             this.icon = "/assets/heal.png";
             this.rarityID = RARITY.common;
         }
@@ -53,6 +56,7 @@ export class Item {
                 this.stats = {
                     type: "Defense",
                     amount: getRandomInt(5, 10) * this.rarityID,
+                    location: this.armorType,
                 }
             }
         }

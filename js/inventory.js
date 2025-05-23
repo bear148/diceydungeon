@@ -1,6 +1,6 @@
 import { ITEM_TYPE } from "./enums.js";
 import { PLAYER } from "./game.js";
-import { hideTooltip, showTooltip } from "./util.js";
+import { formalArmorName, hideTooltip, showTooltip } from "./util.js";
 
 const useButton = document.getElementById("use-item");
 
@@ -23,11 +23,18 @@ export class Inventory {
 
             console.log("Using item:", this.currentItem);
 
-            PLAYER.health += this.currentItem.stats.amount;
-            if (PLAYER.health > 100) PLAYER.health = 100;
-
-            this.removeItem(this.currentItem);
-
+            if (this.currentItem.type === ITEM_TYPE.potion) {
+                PLAYER.health += this.currentItem.stats.amount;
+                if (PLAYER.health > 100) PLAYER.health = 100;
+                this.removeItem(this.currentItem);
+            } else if (this.currentItem.type === ITEM_TYPE.armor) {
+                this.equip(formalArmorName(this.currentItem.stats.location).toLowerCase(), this.currentItem);
+                PLAYER.defense += this.currentItem.stats.amount;
+            } else if (this.currentItem.type === ITEM_TYPE.weapon) {
+                this.equip("hand", this.currentItem);
+                PLAYER.attack += this.currentItem.stats.amount;
+            }
+            console.log(PLAYER)
             if (this.currentItemElement) {
                 this.currentItemElement.remove();
             }
@@ -45,13 +52,10 @@ export class Inventory {
         let itemElement = document.createElement("img");
         itemElement.classList.add("grid-item");
         itemElement.src = item.icon;
-
-        if (item.type === ITEM_TYPE.potion) {
-            itemElement.addEventListener("click", (event) => {
-                event.stopPropagation(); // prevent document click hiding popup
-                this.showItemPopup(event.clientX, event.clientY, itemElement, item);
-            });
-        }
+        itemElement.addEventListener("click", (event) => {
+            event.stopPropagation(); // prevent document click hiding popup
+            this.showItemPopup(event.clientX, event.clientY, itemElement, item);
+        });
 
         itemElement.addEventListener("mouseenter", () => {
             let content = `
@@ -93,6 +97,11 @@ export class Inventory {
         this.currentItemElement = itemElement;
         this.currentItem = item;
 
+        useButton.innerText = "Use";
+        if (item.type != ITEM_TYPE.potion) {
+            useButton.innerText = "Equip";
+        }
+
         this.itemPopup.style.left = x + "px";
         this.itemPopup.style.top = y + "px";
 
@@ -103,5 +112,55 @@ export class Inventory {
         this.itemPopup.classList.add("hidden");
         this.currentItem = null;
         this.currentItemElement = null;
+    }
+
+    equip(loc) {
+        switch (loc) {
+            case "head":
+                if (!PLAYER.armor.head) {
+                    PLAYER.armor.head = this.currentItem;
+                    break;
+                }
+                this.addItem(PLAYER.armor.head);
+                PLAYER.defense -= PLAYER.armor.head.stats.amount;
+                PLAYER.armor.head = this.currentItem;
+                break;
+            case "chest":
+                if (!PLAYER.armor.chest) {
+                    PLAYER.armor.chest = this.currentItem;
+                    break;
+                }
+                this.addItem(PLAYER.armor.chest);
+                PLAYER.defense -= PLAYER.armor.chest.stats.amount;
+                PLAYER.armor.chest = this.currentItem;
+                break;
+            case "boots":
+                if (!PLAYER.armor.boots) {
+                    PLAYER.armor.boots = this.currentItem;
+                    break;
+                }
+                this.addItem(PLAYER.armor.boots);
+                PLAYER.defense -= PLAYER.armor.boots.stats.amount;
+                PLAYER.armor.boots = this.currentItem;
+                break;
+            case "gloves":
+                if (!PLAYER.armor.gloves) {
+                    PLAYER.armor.gloves = this.currentItem;
+                    break;
+                }
+                this.addItem(PLAYER.armor.gloves);
+                PLAYER.defense -= PLAYER.armor.gloves.stats.amount;
+                PLAYER.armor.gloves = this.currentItem;
+                break;
+            case "hand":
+                if (!PLAYER.weapon) {
+                    PLAYER.weapon = this.currentItem;
+                    break;
+                }
+                this.addItem(PLAYER.weapon);
+                PLAYER.attack -= PLAYER.weapon.stats.amount;
+                PLAYER.weapon = this.currentItem;
+                break;
+        }
     }
 }
