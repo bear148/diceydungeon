@@ -33,6 +33,8 @@ export let PLAYER = {
         gloves: null,
     },
     hand: null,
+    xp: 0,
+    level: 1,
 }
 
 export class Game {

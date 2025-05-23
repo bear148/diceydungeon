@@ -44,7 +44,11 @@ export class Enemy {
     }
 
     attackEnemy(target) {
-        let damage = getRandomInt(0, this.attack - target.defense);
+        let damage = getRandomInt(0, this.attack - (target.defense * 0.1));
+
+        if (damage < 0) {
+            damage = 0;
+        }
 
         console.log(`${this.name} attacks ${target.name} for ${damage} damage!`);
         target.health -= (damage);
