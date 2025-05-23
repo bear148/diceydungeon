@@ -162,14 +162,14 @@ export class Game {
             }
         } else {
             console.log("Enemy turn!");
-            // if (!PLAYER.blocking) {
-            //     this.dungeon.enemies[this.dungeonEnemy].attackEnemy(PLAYER);
+            if (!PLAYER.blocking) {
+                this.dungeon.enemies[this.dungeonEnemy].attackEnemy(PLAYER);
 
-            //     if (PLAYER.health <= 0) {
-            //         PLAYER.isDead = true;
-            //         this.triggerGameOver();
-            //     }
-            // }
+                if (PLAYER.health <= 0) {
+                    PLAYER.isDead = true;
+                    this.triggerGameOver();
+                }
+            }
             this.gameState = GAME_STATE.player_turn;
             PLAYER.blocking = false;
             this.showPlayerControls();
