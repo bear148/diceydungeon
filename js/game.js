@@ -3,7 +3,7 @@ import { dungeon_structs } from './dungeon.js';
 import { Inventory } from './inventory.js';
 import { Item } from './item.js';
 import { ITEM_TYPE } from './enums.js';
-import { RNG } from './util.js';
+import { refreshPlayerGearStats, RNG } from './util.js';
 
 export const GAME_STATE = {
     player_turn: 0,
@@ -35,6 +35,7 @@ export let PLAYER = {
     hand: null,
     xp: 0,
     level: 1,
+    nextLevel: 500,
 }
 
 export class Game {
@@ -125,7 +126,8 @@ export class Game {
     
         // Ensure correct visibility
         this.menu.classList.add("hidden");
-    
+        this.dungeonContainer.classList.add("hidden");
+        
         this.combatContainer.classList.remove("hidden");
         this.diceContainer.classList.remove("hidden");
         this.controlContainer.classList.remove("hidden");
@@ -151,12 +153,13 @@ export class Game {
         this.GAME_STATE = GAME_STATE.enemy_turn;
 
         if (this.dungeon.enemies[this.dungeonEnemy].health <= 0) {
+            PLAYER.xp += this.dungeon.enemies[this.dungeonEnemy].xp;
             this.dungeonEnemy++;
             this.combatContainer.children[1].innerText = `${this.dungeonEnemy}/${this.dungeon.enemies.length}`;
+
             if (this.dungeonEnemy >= this.dungeon.enemies.length) {
                 this.gameState = GAME_STATE.battle_end;
                 this.triggerDungeonWin();
-                console.log("Battle ended!");
             } else {
                 this.dungeon.enemies[this.dungeonEnemy].createEnemy();
                 this.gameState = GAME_STATE.player_turn;
@@ -211,10 +214,18 @@ export class Game {
     
         this.Inventory.addItem(drop);
         PLAYER.inventory.push(drop);
-
-        console.log("drop notif: ", drop);
     
         document.getElementById("dungeon-over-container").classList.remove("hidden");
+
+        this.dungeonContainer.classList.remove("hidden");
+
+        if (PLAYER.xp >= PLAYER.nextLevel) {    
+            PLAYER.level++;
+            PLAYER.nextLevel = PLAYER.nextLevel + (PLAYER.nextLevel * 0.5);
+        }
+
+        this.refreshPlayerProgression();
+        refreshPlayerGearStats();
     }
 
     showPlayerControls() {
@@ -233,5 +244,10 @@ export class Game {
         document.getElementById("attack").innerText = PLAYER.attack;
         document.getElementById("defense").innerText = PLAYER.defense;
         document.getElementById("health").innerText = PLAYER.health;
+    }
+
+    refreshPlayerProgression() {
+        document.getElementById("xp").innerText = PLAYER.xp;
+        document.getElementById("lvl").innerText = PLAYER.level;
     }
 }

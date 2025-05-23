@@ -1,7 +1,8 @@
+import { PLAYER } from "./game.js";
 import { getRandomInt } from "./util.js";
 
 export class Enemy {
-    constructor(name, health, attack, defense, speed, image, boss=false) {
+    constructor(name, health, attack, defense, speed, image, xp, boss=false) {
         this.startingHealth = health;
 
         this.name = name;
@@ -10,12 +11,14 @@ export class Enemy {
         this.defense = defense;
         this.speed = speed;
         this.image = image;
+        this.xp = xp;
         this.boss = boss;
     }
     
     createEnemy() {
         this.element = document.getElementById("enemy-sprite-container")
         this.health = this.startingHealth;
+        this.health = this.health * PLAYER.level;
         this.element.innerHTML = '';
 
         if (!this.boss) {
@@ -49,8 +52,7 @@ export class Enemy {
         if (damage < 0) {
             damage = 0;
         }
-
-        console.log(`${this.name} attacks ${target.name} for ${damage} damage!`);
+        
         target.health -= (damage);
         document.getElementById("health").innerText = target.health;
 

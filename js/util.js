@@ -1,4 +1,5 @@
 import { ARMOR_TYPE } from "./enums.js";
+import { PLAYER } from "./game.js";
 
 const tooltip = document.getElementById("tooltip");
 
@@ -80,4 +81,11 @@ export function formalArmorName(type) {
 		default:
 			return "Unknown";
 	}
+}
+
+export function	refreshPlayerGearStats() {
+	console.log(PLAYER);
+	document.getElementById("hlth").innerText = PLAYER.health;
+	document.getElementById("def").innerText = PLAYER.defense;
+	document.getElementById("atk").innerText = PLAYER.attack;
 }

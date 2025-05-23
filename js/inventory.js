@@ -1,6 +1,6 @@
 import { ITEM_TYPE } from "./enums.js";
 import { PLAYER } from "./game.js";
-import { formalArmorName, hideTooltip, showTooltip } from "./util.js";
+import { formalArmorName, hideTooltip, showTooltip, refreshPlayerGearStats } from "./util.js";
 
 const useButton = document.getElementById("use-item");
 
@@ -12,6 +12,8 @@ export class Inventory {
         this.currentItem = null;
         this.currentItemElement = null;
         this.itemPopup = document.getElementById("item-menu");
+
+        this.eqiuppedArmor = document.getElementsByClassName("armor");
 
         this.init();
     }
@@ -39,6 +41,7 @@ export class Inventory {
                 this.currentItemElement.remove();
             }
 
+            refreshPlayerGearStats();
             this.hideItemPopup();
         });
 
@@ -117,6 +120,7 @@ export class Inventory {
     equip(loc) {
         switch (loc) {
             case "head":
+                this.eqiuppedArmor[0].src = this.currentItem.icon;
                 if (!PLAYER.armor.head) {
                     PLAYER.armor.head = this.currentItem;
                     break;
@@ -124,42 +128,55 @@ export class Inventory {
                 this.addItem(PLAYER.armor.head);
                 PLAYER.defense -= PLAYER.armor.head.stats.amount;
                 PLAYER.armor.head = this.currentItem;
+
                 break;
             case "chest":
+                this.eqiuppedArmor[1].src = this.currentItem.icon;
                 if (!PLAYER.armor.chest) {
                     PLAYER.armor.chest = this.currentItem;
+
                     break;
                 }
                 this.addItem(PLAYER.armor.chest);
                 PLAYER.defense -= PLAYER.armor.chest.stats.amount;
                 PLAYER.armor.chest = this.currentItem;
+
                 break;
             case "boots":
+                this.eqiuppedArmor[2].src = this.currentItem.icon;
                 if (!PLAYER.armor.boots) {
                     PLAYER.armor.boots = this.currentItem;
+
                     break;
                 }
                 this.addItem(PLAYER.armor.boots);
                 PLAYER.defense -= PLAYER.armor.boots.stats.amount;
                 PLAYER.armor.boots = this.currentItem;
+
                 break;
             case "gloves":
+                this.eqiuppedArmor[3].src = this.currentItem.icon;
                 if (!PLAYER.armor.gloves) {
                     PLAYER.armor.gloves = this.currentItem;
+
                     break;
                 }
                 this.addItem(PLAYER.armor.gloves);
                 PLAYER.defense -= PLAYER.armor.gloves.stats.amount;
                 PLAYER.armor.gloves = this.currentItem;
+
                 break;
             case "hand":
+                document.getElementById("hands-image").src = this.currentItem.icon;
                 if (!PLAYER.weapon) {
                     PLAYER.weapon = this.currentItem;
+
                     break;
                 }
                 this.addItem(PLAYER.weapon);
                 PLAYER.attack -= PLAYER.weapon.stats.amount;
                 PLAYER.weapon = this.currentItem;
+
                 break;
         }
     }

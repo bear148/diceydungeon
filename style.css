@@ -24,6 +24,7 @@ body {
     overflow: hidden;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     color: white;
+    font-size: 14px;
 }
 
 #menu,
@@ -344,4 +345,75 @@ img {
 #use-item:hover {
     box-shadow: none;
     background: #bbb;
+}
+
+#armor-grid {
+    display: flex;
+}
+
+.backToDungeonSelect {
+    margin-top: 10px;
+}
+
+#player-pstats-grid {
+    display: flex;
+    justify-content: space-around;
+}
+
+#player-cstats-grid {
+    display: flex;
+    justify-content: space-around;
+}
+
+#lvl {
+    color: gold;
+}
+
+#xp {
+    color: lime;
+}
+
+#def {
+    color: rgb(0, 0, 255);
+}
+
+#atk {
+    color: red;
+}
+
+#hlth {
+    color: lime;
+}
+
+#lvl::before {
+    content: "Level: ";
+}
+
+#xp::before {
+    content: "XP: ";
+}
+
+#def::before {
+    content: "Defense: ";
+}
+
+#atk::before {
+    content: "Attack: ";
+}
+
+#hlth::before {
+    content: "Health: ";
+}
+
+#aux-stats-container {
+    background: #333;
+    font-size: 14px;
+    pointer-events: none;
+    z-index: 1000;
+    outline: 3px solid #333;
+    border: 1px dashed gold;
+}
+
+img[src*="placeholder"] {
+    opacity: 0.3;
 }
