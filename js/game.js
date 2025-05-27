@@ -65,7 +65,6 @@ export class Game {
 
         this.startMenu.classList.add("hidden");
         this.menu.classList.toggle("hidden");
-        this.dungeonContainer.classList.toggle("hidden");
 
         for (let d of dungeons) {
             d.addEventListener('click', () => {
@@ -111,8 +110,8 @@ export class Game {
 
         for (const element of document.getElementsByClassName("backToDungeonSelect")) {
             element.addEventListener("click", () => {
-                this.menu.classList.toggle("hidden");
-                element.parentElement.classList.toggle("hidden");
+                element.parentElement.classList.add("hidden");
+                this.goBackToDungeonMenu();
             });
         }
 
@@ -126,7 +125,6 @@ export class Game {
     
         // Ensure correct visibility
         this.menu.classList.add("hidden");
-        this.dungeonContainer.classList.add("hidden");
         
         this.combatContainer.classList.remove("hidden");
         this.diceContainer.classList.remove("hidden");
@@ -154,8 +152,25 @@ export class Game {
 
         if (this.dungeon.enemies[this.dungeonEnemy].health <= 0) {
             PLAYER.xp += this.dungeon.enemies[this.dungeonEnemy].xp;
+
+            if (PLAYER.xp >= PLAYER.nextLevel) {    
+                PLAYER.level++;
+                PLAYER.nextLevel = PLAYER.nextLevel + (PLAYER.nextLevel * 0.5);
+                this.playerLevelUp();
+            }
+
             this.dungeonEnemy++;
             this.combatContainer.children[1].innerText = `${this.dungeonEnemy}/${this.dungeon.enemies.length}`;
+
+            if (RNG(10)) {
+                let drop = RNG(50) ? new Item(ITEM_TYPE.weapon).generate() : new Item(ITEM_TYPE.armor).generate();
+                this.Inventory.addItem(drop);
+                PLAYER.inventory.push(drop);
+            } else if (RNG(25)) {
+                let pot = new Item(ITEM_TYPE.potion).generate();
+                this.Inventory.addItem(pot);
+                PLAYER.inventory.push(pot);
+            }
 
             if (this.dungeonEnemy >= this.dungeon.enemies.length) {
                 this.gameState = GAME_STATE.battle_end;
@@ -169,6 +184,7 @@ export class Game {
             console.log("Enemy turn!");
             if (!PLAYER.blocking) {
                 this.dungeon.enemies[this.dungeonEnemy].attackEnemy(PLAYER);
+                this.refreshPlayerStats();
 
                 if (PLAYER.health <= 0) {
                     PLAYER.isDead = true;
@@ -179,15 +195,17 @@ export class Game {
             PLAYER.blocking = false;
             this.showPlayerControls();
         }
+        this.refreshPlayerProgression();
     }
 
     goBackToDungeonMenu() {
-        this.combatContainer.classList.toggle("hidden");
-        this.diceContainer.classList.toggle("hidden");
-        this.controlContainer.classList.toggle("hidden");
-        // this.dungeonContainer.classList.toggle("hidden");
-        this.menu.classList.toggle("hidden");
+        this.combatContainer.classList.add("hidden");
+        this.diceContainer.classList.add("hidden");
+        this.controlContainer.classList.add("hidden");
+        this.menu.classList.remove("hidden");
 
+        this.dungeon = null;
+        this.dungeonEnemy = 0;
         this.gameState = GAME_STATE.menu;
     }
 
@@ -196,6 +214,8 @@ export class Game {
         this.diceContainer.classList.add("hidden");
         this.controlContainer.classList.add("hidden");
     
+        this.resetStats();
+
         document.getElementById("game-over-container").classList.remove("hidden");
     }
 
@@ -216,8 +236,6 @@ export class Game {
         PLAYER.inventory.push(drop);
     
         document.getElementById("dungeon-over-container").classList.remove("hidden");
-
-        this.dungeonContainer.classList.remove("hidden");
 
         if (PLAYER.xp >= PLAYER.nextLevel) {    
             PLAYER.level++;
@@ -244,10 +262,30 @@ export class Game {
         document.getElementById("attack").innerText = PLAYER.attack;
         document.getElementById("defense").innerText = PLAYER.defense;
         document.getElementById("health").innerText = PLAYER.health;
+        document.getElementById("hlth").innerText = PLAYER.health;
     }
 
     refreshPlayerProgression() {
         document.getElementById("xp").innerText = PLAYER.xp;
         document.getElementById("lvl").innerText = PLAYER.level;
+    }
+
+    resetStats() {
+        PLAYER.xp = 0;
+        PLAYER.level = 1;
+        PLAYER.health = 100;
+
+        this.Inventory.clear();
+        this.refreshPlayerStats();
+        this.refreshPlayerProgression();
+    }
+
+    playerLevelUp() {
+        PLAYER.attack += 2;
+        PLAYER.defense += 1;
+        PLAYER.health += 20;
+
+        this.refreshPlayerStats();
+        this.refreshPlayerProgression();
     }
 }

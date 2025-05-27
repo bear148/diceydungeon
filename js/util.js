@@ -84,7 +84,6 @@ export function formalArmorName(type) {
 }
 
 export function	refreshPlayerGearStats() {
-	console.log(PLAYER);
 	document.getElementById("hlth").innerText = PLAYER.health;
 	document.getElementById("def").innerText = PLAYER.defense;
 	document.getElementById("atk").innerText = PLAYER.attack;

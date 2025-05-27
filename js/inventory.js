@@ -180,4 +180,17 @@ export class Inventory {
                 break;
         }
     }
+
+    clear() {
+        this.items = [];
+        this.container.innerHTML = ""; // Clear the container
+        PLAYER.armor = {
+            head: null,
+            chest: null,
+            boots: null,
+            gloves: null,
+        };
+        PLAYER.weapon = null;
+        refreshPlayerGearStats();
+    }
 }
