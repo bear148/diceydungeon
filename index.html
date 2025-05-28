@@ -21,19 +21,19 @@
                         <img class="dungeon-icon" src="/assets/swamp.png" alt="Muddy Swamp">
                         <h2>Muddy Swamp</h2>
                     </div>
-                    <div class="dungeon" data-dungeon-id="1" data-dungeon-name="haunted_crypt">
+                    <div class="dungeon hidden" data-dungeon-id="1" data-dungeon-name="haunted_crypt" data-unlock="5">
                         <img class="dungeon-icon" src="/assets/crypt.png" alt="Haunted Crypt">
                         <h2>Haunted Crypt</h2>
                     </div>
-                    <div class="dungeon" data-dungeon-id="2" data-dungeon-name="fury_cave">
+                    <div class="dungeon hidden" data-dungeon-id="2" data-dungeon-name="fury_cave" data-unlock="10">
                         <img class="dungeon-icon" src="/assets/cave.png" alt="Fury Cave">
                         <h2>Fury Cave</h2>
                     </div>
-                    <div class="dungeon" data-dungeon-id="3" data-dungeon-name="forsaken_island">
+                    <div class="dungeon hidden" data-dungeon-id="3" data-dungeon-name="forsaken_island" data-unlock="15">
                         <img class="dungeon-icon" src="/assets/island.png" alt="Forsaken Island">
                         <h2>Forsaken Island</h2>
                     </div>
-                    <div class="dungeon" data-dungeon-id="4" data-dungeon-name="temple_of_gods">
+                    <div class="dungeon hidden" data-dungeon-id="4" data-dungeon-name="temple_of_gods"  data-unlock="30">
                         <img class="dungeon-icon" src="/assets/temple.png" alt="Temple of Gods">
                         <h2>Temple of Gods</h2>
                     </div>
@@ -71,6 +71,7 @@
                 <div id="tooltip" class="hidden"></div>
                 <div id="item-menu" class="hidden">
                     <button id="use-item">Use</button>
+                    <button id="sell-item">Sell: <span id="item-value">0</span></button>
                 </div>
                 <h1>Inventory</h1>
                 <p class="tip">Click on items to open their menu.</p>
@@ -89,6 +90,7 @@
                         <div id="player-pstats-grid">
                             <p id="lvl">1</p>
                             <p id="xp">0</p>
+                            <p id="gold">0</p>
                         </div>
                         <div id="player-cstats-grid">
                             <p id="hlth">100</p>

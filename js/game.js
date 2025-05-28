@@ -3,7 +3,7 @@ import { dungeon_structs } from './dungeon.js';
 import { Inventory } from './inventory.js';
 import { Item } from './item.js';
 import { ITEM_TYPE } from './enums.js';
-import { refreshPlayerGearStats, RNG } from './util.js';
+import { refreshPlayerStats, RNG } from './util.js';
 
 export const GAME_STATE = {
     player_turn: 0,
@@ -51,6 +51,7 @@ export class Game {
         this.settings = ["even", "odd"]; // attack, defense
         this.inventoryContainer = document.getElementById("inventory-container");
         this.inventoryGrid = document.getElementById("inventory-grid");
+        this.dungeonElements = document.getElementsByClassName("dungeon");
 
         this.diceController = new Dice(this.diceContainer);
         this.Inventory = new Inventory(this.inventoryGrid);
@@ -115,12 +116,11 @@ export class Game {
                 this.goBackToDungeonMenu();
             });
         }
-
-        this.refreshPlayerStats();
+        refreshPlayerStats();
     }
 
     selectDungeon(dungeon) {
-        this.refreshPlayerStats();
+        refreshPlayerStats();
         this.gameState = GAME_STATE.player_turn;
         this.dungeon = dungeon;
     
@@ -184,7 +184,7 @@ export class Game {
         } else {
             if (!PLAYER.blocking) {
                 this.dungeon.enemies[this.dungeonEnemy].attackEnemy(PLAYER);
-                this.refreshPlayerStats();
+                refreshPlayerStats();
 
                 if (PLAYER.health <= 0) {
                     PLAYER.isDead = true;
@@ -195,7 +195,7 @@ export class Game {
             PLAYER.blocking = false;
             this.showPlayerControls();
         }
-        this.refreshPlayerProgression();
+        refreshPlayerStats();
     }
 
     goBackToDungeonMenu() {
@@ -242,8 +242,7 @@ export class Game {
             PLAYER.nextLevel = PLAYER.nextLevel + (PLAYER.nextLevel * 0.5);
         }
 
-        this.refreshPlayerProgression();
-        refreshPlayerGearStats();
+        refreshPlayerStats();
     }
 
     showPlayerControls() {
@@ -258,26 +257,13 @@ export class Game {
         return this.gameState;
     }
 
-    refreshPlayerStats() {
-        document.getElementById("attack").innerText = PLAYER.attack;
-        document.getElementById("defense").innerText = PLAYER.defense;
-        document.getElementById("health").innerText = PLAYER.health;
-        document.getElementById("hlth").innerText = PLAYER.health;
-    }
-
-    refreshPlayerProgression() {
-        document.getElementById("xp").innerText = PLAYER.xp;
-        document.getElementById("lvl").innerText = PLAYER.level;
-    }
-
     resetStats() {
         PLAYER.xp = 0;
         PLAYER.level = 1;
         PLAYER.health = 100;
 
         this.Inventory.clear();
-        this.refreshPlayerStats();
-        this.refreshPlayerProgression();
+        refreshPlayerStats();
     }
 
     playerLevelUp() {
@@ -285,7 +271,10 @@ export class Game {
         PLAYER.defense += 1;
         PLAYER.maxHealth += 20;
 
-        this.refreshPlayerStats();
-        this.refreshPlayerProgression();
+        refreshPlayerStats();
+
+        if (PLAYER.level == 5) {
+            this.dungeonElements.children[1].classList.remove("hidden");
+        }
     }
 }

@@ -326,14 +326,17 @@ img {
     position: fixed;
     color: white;
     border-radius: 5px;
-    padding: 6px 10px;
     z-index: 2000;
+    background-color:rgb(0, 0, 155);
+    display: flex;
+    flex-flow: column nowrap;
 }
 
 .hidden {
     display: none;
 }
 
+#sell-item,
 #use-item {
     cursor: pointer;
     border: none;
@@ -342,9 +345,9 @@ img {
     color: white;
 }
 
+#sell-item:hover,
 #use-item:hover {
     box-shadow: none;
-    background: #bbb;
 }
 
 #armor-grid {
@@ -363,10 +366,6 @@ img {
 #player-cstats-grid {
     display: flex;
     justify-content: space-around;
-}
-
-#lvl {
-    color: gold;
 }
 
 #xp {
@@ -416,4 +415,24 @@ img {
 
 img[src*="placeholder"] {
     opacity: 0.3;
+}
+
+#gold {
+    color: gold;
+}
+
+#gold::before {
+    content: "$";
+}
+
+#item-value {
+    color: gold;   
+}
+
+#item-value::before {
+    content: "$";
+}
+
+#inv-stats-container p {
+    width: 100px;
 }

@@ -1,8 +1,9 @@
 import { ITEM_TYPE } from "./enums.js";
 import { PLAYER } from "./game.js";
-import { formalArmorName, hideTooltip, showTooltip, refreshPlayerGearStats } from "./util.js";
+import { formalArmorName, hideTooltip, showTooltip, refreshPlayerStats } from "./util.js";
 
 const useButton = document.getElementById("use-item");
+const sellButton = document.getElementById("sell-item");
 
 export class Inventory {
     constructor(container) {
@@ -19,6 +20,19 @@ export class Inventory {
     }
 
     init() {
+        sellButton.addEventListener("click", () => {
+            if (!this.currentItem) return;
+            if (this.currentItem.type === ITEM_TYPE.potion) return;
+
+            PLAYER.coins += this.currentItem.value; // Assuming PLAYER has a gold property
+            this.removeItem(this.currentItem);
+            if (this.currentItemElement) {
+                this.currentItemElement.remove();
+            }
+            refreshPlayerStats();
+            this.hideItemPopup();
+        });
+
         // Attach use button listener once
         useButton.addEventListener("click", () => {
             if (!this.currentItem) return;
@@ -41,7 +55,7 @@ export class Inventory {
                 this.currentItemElement.remove();
             }
 
-            refreshPlayerGearStats();
+            refreshPlayerStats();
             this.hideItemPopup();
         });
 
@@ -99,10 +113,14 @@ export class Inventory {
     showItemPopup(x, y, itemElement, item) {
         this.currentItemElement = itemElement;
         this.currentItem = item;
+        document.getElementById("sell-item").classList.remove("hidden");
 
         useButton.innerText = "Use";
         if (item.type != ITEM_TYPE.potion) {
             useButton.innerText = "Equip";
+            document.getElementById("item-value").innerText = item.value;
+        } else {
+            document.getElementById("sell-item").classList.add("hidden");
         }
 
         this.itemPopup.style.left = x + "px";
@@ -191,6 +209,12 @@ export class Inventory {
             gloves: null,
         };
         PLAYER.weapon = null;
-        refreshPlayerGearStats();
+        refreshPlayerStats();
+
+        this.eqiuppedArmor[0].src = "/assets/placeholderhelm.png";
+        this.eqiuppedArmor[1].src = "/assets/placeholderchest.png";
+        this.eqiuppedArmor[2].src = "/assets/placeholderboots.png";
+        this.eqiuppedArmor[3].src = "/assets/placeholdergloves.png";
+        document.getElementById("hands-image").src = "/assets/placeholderweapon.png";
     }
 }

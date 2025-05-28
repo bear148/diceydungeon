@@ -21,6 +21,8 @@ export class Item {
         
         this.stats = [];
 
+        this.value = getRandomInt(1, 100) * this.rarityID; // Value is based on rarity
+
         this.generateStats();
     }
 
@@ -33,7 +35,8 @@ export class Item {
                 rarityID: this.rarityID,
                 rarityName: this.getRarityTitle(),
             },
-            stats: this.stats
+            stats: this.stats,
+            value: this.value,
         }
     }
 
