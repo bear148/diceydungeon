@@ -18,6 +18,7 @@ export const GAME_STATE = {
 export let PLAYER = {
     name: "Player",
     health: 100,
+    maxHealth: 100,
     coins: 10,
     attack: 5,
     defense: 0,
@@ -162,7 +163,7 @@ export class Game {
             this.dungeonEnemy++;
             this.combatContainer.children[1].innerText = `${this.dungeonEnemy}/${this.dungeon.enemies.length}`;
 
-            if (RNG(10)) {
+            if (RNG(25)) {
                 let drop = RNG(50) ? new Item(ITEM_TYPE.weapon).generate() : new Item(ITEM_TYPE.armor).generate();
                 this.Inventory.addItem(drop);
                 PLAYER.inventory.push(drop);
@@ -181,7 +182,6 @@ export class Game {
                 this.showPlayerControls();
             }
         } else {
-            console.log("Enemy turn!");
             if (!PLAYER.blocking) {
                 this.dungeon.enemies[this.dungeonEnemy].attackEnemy(PLAYER);
                 this.refreshPlayerStats();
@@ -283,7 +283,7 @@ export class Game {
     playerLevelUp() {
         PLAYER.attack += 2;
         PLAYER.defense += 1;
-        PLAYER.health += 20;
+        PLAYER.maxHealth += 20;
 
         this.refreshPlayerStats();
         this.refreshPlayerProgression();

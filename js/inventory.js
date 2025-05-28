@@ -27,7 +27,7 @@ export class Inventory {
 
             if (this.currentItem.type === ITEM_TYPE.potion) {
                 PLAYER.health += this.currentItem.stats.amount;
-                if (PLAYER.health > 100) PLAYER.health = 100;
+                if (PLAYER.health > PLAYER.maxHealth) PLAYER.health = PLAYER.maxHealth;
                 this.removeItem(this.currentItem);
             } else if (this.currentItem.type === ITEM_TYPE.armor) {
                 this.equip(formalArmorName(this.currentItem.stats.location).toLowerCase(), this.currentItem);
