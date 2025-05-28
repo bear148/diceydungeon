@@ -95,3 +95,8 @@ export function	refreshPlayerStats() {
 	document.getElementById("defense").innerText = PLAYER.defense;
 	document.getElementById("health").innerText = PLAYER.health;
 }
+
+export function updateAllCoinCounters() {
+	document.getElementById("gold").innerText = PLAYER.coins;
+	document.getElementById("store-coins").innerText = PLAYER.coins;
+}

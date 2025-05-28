@@ -38,9 +38,12 @@
                         <h2>Temple of Gods</h2>
                     </div>
                 </div>
-                <button id="bindAttacks">Bind Attacks</button>
-                <button id="inventoryGo">Inventory</button>
-                <a href="/index.html">Back</a>
+                <div class="nav">
+                    <button id="bindAttacks">Bind Attacks</button>
+                    <button id="inventoryGo">Inventory</button>
+                    <button id="storeGo">Store</button>
+                    <a href="/index.html">Back</a>
+                </div>
             </div>
             <div id="combat-container" class="hidden">
                 <h1 id="dungeon-title"></h1>
@@ -97,6 +100,18 @@
                             <p id="atk">5</p>
                             <p id="def">0</p>
                         </div>
+                    </div>
+                </div>
+                <button class="backToDungeonSelect">Back</button>
+            </div>
+            <div id="store-container" class="hidden">
+                <h1>Store</h1>
+                <p id="store-balance"><span id="store-coins">0</span></p>
+                <div id="store">
+                    <div class="store-item">
+                        <img class="store-item-icon" src="/assets/heal.png" alt="Health Potion">
+                        <p class="store-item-name">Health Potion</p>
+                        <button class="buy-item" data-item-id="3" price="10">10</button>
                     </div>
                 </div>
                 <button class="backToDungeonSelect">Back</button>

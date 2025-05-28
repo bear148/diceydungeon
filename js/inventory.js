@@ -202,13 +202,7 @@ export class Inventory {
     clear() {
         this.items = [];
         this.container.innerHTML = ""; // Clear the container
-        PLAYER.armor = {
-            head: null,
-            chest: null,
-            boots: null,
-            gloves: null,
-        };
-        PLAYER.weapon = null;
+        PLAYER.reset();
         refreshPlayerStats();
 
         this.eqiuppedArmor[0].src = "/assets/placeholderhelm.png";

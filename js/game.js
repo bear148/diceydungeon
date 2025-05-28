@@ -3,7 +3,7 @@ import { dungeon_structs } from './dungeon.js';
 import { Inventory } from './inventory.js';
 import { Item } from './item.js';
 import { ITEM_TYPE } from './enums.js';
-import { refreshPlayerStats, RNG } from './util.js';
+import { refreshPlayerStats, RNG, updateAllCoinCounters } from './util.js';
 
 export const GAME_STATE = {
     player_turn: 0,
@@ -37,6 +37,28 @@ export let PLAYER = {
     xp: 0,
     level: 1,
     nextLevel: 500,
+    reset: function() {
+        this.health = 100;
+        this.maxHealth = 100;
+        this.coins = 10;
+        this.attack = 5;
+        this.defense = 0;
+        this.speed = 1;
+        this.skills = [];
+        this.inventory = [];
+        this.blocking = false;
+        this.isDead = false;
+        this.armor = {
+            head: null,
+            chest: null,
+            boots: null,
+            gloves: null,
+        };
+        this.hand = null;
+        this.xp = 0;
+        this.level = 1;
+        this.nextLevel = 500;
+    }
 }
 
 export class Game {
@@ -52,12 +74,14 @@ export class Game {
         this.inventoryContainer = document.getElementById("inventory-container");
         this.inventoryGrid = document.getElementById("inventory-grid");
         this.dungeonElements = document.getElementsByClassName("dungeon");
+        this.storeContainer = document.getElementById("store-container");
 
         this.diceController = new Dice(this.diceContainer);
         this.Inventory = new Inventory(this.inventoryGrid);
 
         this.dungeon = null;
         this.dungeonEnemy = 0;
+        this.nextDungeonUnlock = 1;
 
         this.init();
     }
@@ -99,6 +123,13 @@ export class Game {
             this.inventoryContainer.classList.toggle("hidden");
         });
 
+        document.getElementById("storeGo").addEventListener("click", () => {
+            this.menu.classList.toggle("hidden");
+            this.storeContainer.classList.toggle("hidden");
+
+            document.getElementById("store-coins").innerText = PLAYER.coins;
+        })
+
         for (const element of document.getElementsByClassName("restartGame")) {
             element.addEventListener("click", () => {
                 this.dungeon = null;
@@ -116,6 +147,18 @@ export class Game {
                 this.goBackToDungeonMenu();
             });
         }
+
+        for (const element of document.getElementsByClassName("buy-item")) {
+            element.addEventListener("click", () => {
+                if (PLAYER.coins < parseInt(element.attributes[2].value)) return;
+
+                PLAYER.coins -= parseInt(element.attributes[2].value);
+                this.Inventory.addItem(new Item(Number(element.attributes[1].value)).generate());
+                refreshPlayerStats();
+                updateAllCoinCounters();
+            });
+        }
+
         refreshPlayerStats();
     }
 
@@ -163,11 +206,11 @@ export class Game {
             this.dungeonEnemy++;
             this.combatContainer.children[1].innerText = `${this.dungeonEnemy}/${this.dungeon.enemies.length}`;
 
-            if (RNG(25)) {
+            if (RNG(45)) {
                 let drop = RNG(50) ? new Item(ITEM_TYPE.weapon).generate() : new Item(ITEM_TYPE.armor).generate();
                 this.Inventory.addItem(drop);
                 PLAYER.inventory.push(drop);
-            } else if (RNG(25)) {
+            } else if (RNG(45)) {
                 let pot = new Item(ITEM_TYPE.potion).generate();
                 this.Inventory.addItem(pot);
                 PLAYER.inventory.push(pot);
@@ -273,8 +316,9 @@ export class Game {
 
         refreshPlayerStats();
 
-        if (PLAYER.level == 5) {
-            this.dungeonElements.children[1].classList.remove("hidden");
+        if (PLAYER.level % 5 == 0 && PLAYER.level <= 30) {
+            this.dungeonElements[this.nextDungeonUnlock].classList.remove("hidden");
+            this.nextDungeonUnlock++;
         }
     }
 }

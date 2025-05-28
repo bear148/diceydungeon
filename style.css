@@ -27,6 +27,10 @@ body {
     font-size: 14px;
 }
 
+img {
+    image-rendering: pixelated;
+}
+
 #menu,
 #game-container,
 #controls {
@@ -59,23 +63,38 @@ button:hover {
     box-shadow: 3px 3px 30px var(--blue);
 }
 
+#item-menu,
 a,
 button {
+    display: inline-block;
     background-color: var(--blue);
-    color: white;
-    border: none;
-    padding-top: 5px;
-    padding-bottom: 5px;
     width: fit-content;
     font-weight: normal;
     font-size: 12px;
     user-select: none;
+    text-align: center;
+    appearance: auto;
+    text-rendering: auto;
+    color: white;
+    letter-spacing: normal;
+    word-spacing: normal;
+    line-height: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;
+    text-align: center;
+    box-sizing: border-box;
+    padding-block: 1px;
+    padding-inline: 6px;
+    border-width: 2px;
+    border-style: outset;
+    border-color: buttonborder;
+    border-image: initial;
 }
 
 a {
     text-decoration: none;
-    padding-left: 4px;
-    padding-right: 4px;
 }
 
 #credit {
@@ -218,11 +237,6 @@ img {
     margin-right: 25px;
 }
 
-#bindAttacks {
-    margin-top: 25px;
-    margin-bottom: 10px;
-}
-
 #settings-container {
     display: flex;
     flex-flow: column nowrap;
@@ -236,10 +250,6 @@ img {
 
 .boss {
     color: red;
-}
-
-#inventoryGo {
-    margin-bottom: 10px;
 }
 
 #inventory-grid {
@@ -260,7 +270,6 @@ img {
     border: 1px solid #ccc;
     /* cell borders */
     box-sizing: border-box;
-    image-rendering: pixelated;
 }
 
 .grid-item.dragging {
@@ -325,9 +334,7 @@ img {
 #item-menu {
     position: fixed;
     color: white;
-    border-radius: 5px;
     z-index: 2000;
-    background-color:rgb(0, 0, 155);
     display: flex;
     flex-flow: column nowrap;
 }
@@ -341,8 +348,8 @@ img {
     cursor: pointer;
     border: none;
     padding: 5px 10px;
-    border-radius: 3px;
     color: white;
+    width: 100%;
 }
 
 #sell-item:hover,
@@ -425,14 +432,28 @@ img[src*="placeholder"] {
     content: "$";
 }
 
+#store-coins,
 #item-value {
     color: gold;   
 }
 
+#store-coins::before,
+.buy-item::before,
 #item-value::before {
     content: "$";
 }
 
 #inv-stats-container p {
     width: 100px;
+}
+
+.store-item {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.store-item img {
+    width: 100%;
 }
