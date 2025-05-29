@@ -189,7 +189,7 @@ img {
     width: fit-content;
 }
 
-#enemy-sprite-container img {
+#enemy-sprite-container img.flip {
     width: 50%;
     transform: scaleX(-1);
 }
@@ -444,7 +444,7 @@ img[src*="placeholder"] {
 }
 
 #inv-stats-container p {
-    width: 100px;
+    width: 200px;
 }
 
 .store-item {
@@ -455,5 +455,35 @@ img[src*="placeholder"] {
 }
 
 .store-item img {
+    width: 64px;
+}
+
+.nav {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 10px;
+    width: 600px;
+}
+
+.nav > button {
+    width: 150px;
+}
+
+#store {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+    align-items: center;
     width: 100%;
+}
+
+#store-container  {
+    min-width: 600px;
+}
+
+[alt="Crown"],
+[alt="Middle Ages"],
+[alt="Russia"] {
+    width: 100px;
+    height: 100px;
 }

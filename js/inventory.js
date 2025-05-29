@@ -202,8 +202,6 @@ export class Inventory {
     clear() {
         this.items = [];
         this.container.innerHTML = ""; // Clear the container
-        PLAYER.reset();
-        refreshPlayerStats();
 
         this.eqiuppedArmor[0].src = "/assets/placeholderhelm.png";
         this.eqiuppedArmor[1].src = "/assets/placeholderchest.png";

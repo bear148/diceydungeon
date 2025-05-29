@@ -2,7 +2,7 @@ import { PLAYER } from "./game.js";
 import { getRandomInt } from "./util.js";
 
 export class Enemy {
-    constructor(name, health, attack, defense, speed, image, xp, boss=false) {
+    constructor(name, health, attack, defense, speed, image, xp, boss=false, flip=true ) {
         this.startingHealth = health;
         this.startingAttack = attack;
         this.startingDefense = defense;
@@ -15,21 +15,27 @@ export class Enemy {
         this.image = image;
         this.xp = xp;
         this.boss = boss;
+        this.flip = flip;
     }
     
     createEnemy() {
         this.element = document.getElementById("enemy-sprite-container")
         this.health = this.startingHealth;
-        this.health = this.health * PLAYER.level;
+        this.health = this.health + (PLAYER.level * 10);
 
-        this.attack = this.startingAttack + (PLAYER.level * 2);
+        this.attack = (this.attack >= 1800) ? 1800 : this.startingAttack + (PLAYER.level * 2);
         this.defense = this.startingDefense + (PLAYER.level * 2);
         
         this.element.innerHTML = '';
 
+        if (this.flip) {
+            this.element.innerHTML += `<img src="${this.image}" alt="${this.name}" class="flip">`;
+        } else {
+            this.element.innerHTML += `<img src="${this.image}" alt="${this.name}">`;
+        }
+
         if (!this.boss) {
-            this.element.innerHTML = `
-                <img src="${this.image}" alt="${this.name}">
+            this.element.innerHTML += `
                 <div class="enemy-info">
                     <h3>${this.name}</h3>
                     <p>Health: <span class="health">${this.health}</span></p>
@@ -39,8 +45,7 @@ export class Enemy {
                 </div>
             `;
         } else {
-            this.element.innerHTML = `
-                <img src="${this.image}" alt="${this.name}">
+            this.element.innerHTML += `
                 <div class="enemy-info">
                     <h3><span class="boss">BOSS</span> ${this.name}</h3>
                     <p>Health: <span class="health">${this.health}</span></p>

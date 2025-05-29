@@ -25,25 +25,25 @@
                         <img class="dungeon-icon" src="/assets/crypt.png" alt="Haunted Crypt">
                         <h2>Haunted Crypt</h2>
                     </div>
-                    <div class="dungeon hidden" data-dungeon-id="2" data-dungeon-name="fury_cave" data-unlock="10">
-                        <img class="dungeon-icon" src="/assets/cave.png" alt="Fury Cave">
-                        <h2>Fury Cave</h2>
+                    <div class="dungeon hidden" data-dungeon-id="2" data-dungeon-name="russia" data-unlock="10">
+                        <img class="dungeon-icon" src="/assets/russia.png" alt="Russia">
+                        <h2>Russia</h2>
                     </div>
-                    <div class="dungeon hidden" data-dungeon-id="3" data-dungeon-name="forsaken_island" data-unlock="15">
-                        <img class="dungeon-icon" src="/assets/island.png" alt="Forsaken Island">
-                        <h2>Forsaken Island</h2>
+                    <div class="dungeon hidden" data-dungeon-id="3" data-dungeon-name="middle_ages" data-unlock="15">
+                        <img class="dungeon-icon" src="/assets/coa.png" alt="Middle Ages">
+                        <h2>Middle Ages</h2>
                     </div>
-                    <div class="dungeon hidden" data-dungeon-id="4" data-dungeon-name="temple_of_gods"  data-unlock="30">
-                        <img class="dungeon-icon" src="/assets/temple.png" alt="Temple of Gods">
-                        <h2>Temple of Gods</h2>
+                    <div class="dungeon hidden" data-dungeon-id="4" data-dungeon-name="kings"  data-unlock="30">
+                        <img class="dungeon-icon" src="/assets/crown.png" alt="Crown">
+                        <h2>Kings</h2>
                     </div>
                 </div>
                 <div class="nav">
                     <button id="bindAttacks">Bind Attacks</button>
                     <button id="inventoryGo">Inventory</button>
                     <button id="storeGo">Store</button>
-                    <a href="/index.html">Back</a>
                 </div>
+                <a href="/index.html">Back</a>
             </div>
             <div id="combat-container" class="hidden">
                 <h1 id="dungeon-title"></h1>
@@ -70,7 +70,7 @@
                 </div>
                 <button class="backToDungeonSelect">Back</button>
             </div>
-            <div id="inventory-container" class="hidden">
+            <div id="inventory-container" class="hidden container">
                 <div id="tooltip" class="hidden"></div>
                 <div id="item-menu" class="hidden">
                     <button id="use-item">Use</button>
@@ -104,7 +104,7 @@
                 </div>
                 <button class="backToDungeonSelect">Back</button>
             </div>
-            <div id="store-container" class="hidden">
+            <div id="store-container" class="hidden container">
                 <h1>Store</h1>
                 <p id="store-balance"><span id="store-coins">0</span></p>
                 <div id="store">
@@ -113,20 +113,50 @@
                         <p class="store-item-name">Health Potion</p>
                         <button class="buy-item" data-item-id="3" price="10">10</button>
                     </div>
+                    <div class="store-item">
+                        <img class="store-item-icon" src="/assets/weapons/short_sword1.png" alt="Short Sword">
+                        <p class="store-item-name">Random Weapon Drop</p>
+                        <button class="buy-item" data-item-id="1" price="100">100</button>
+                    </div>
+                    <div class="store-item">
+                        <img class="store-item-icon" src="/assets/armor/chest.png" alt="Chestplate">
+                        <p class="store-item-name">Random Armor Drop</p>
+                        <button class="buy-item" data-item-id="2" price="100">100</button>
+                    </div>
                 </div>
                 <button class="backToDungeonSelect">Back</button>
             </div>
             <div id="settings-container" class="hidden">
                 <h1>Settings</h1>
-                <label for="attacks">Bind Your Primary Attack:</label>
-                <select id="attack-settings" name="attacks">
-                    <option value="even">Even</option>
-                    <option value="odd">Odd</option>
+                <label for="1">1:</label>
+                <select id="1s" class="dice-option" name="1">
+                    <option value="attack">Attack</option>
+                    <option value="defend">Defend</option>
                 </select>
-                <label for="defense">Bind Your Primary Defense:</label>
-                <select id="defense-settings" name="defense">
-                    <option value="odd">Odd</option>
-                    <option value="even">Even</option>
+                <label for="2">2:</label>
+                <select id="2s" class="dice-option" name="2">
+                    <option value="attack">Attack</option>
+                    <option value="defend">Defend</option>
+                </select>
+                <label for="3">3:</label>
+                <select id="3s" class="dice-option" name="3">
+                    <option value="attack">Attack</option>
+                    <option value="defend">Defend</option>
+                </select>
+                <label for="4">4:</label>
+                <select id="4s" class="dice-option" name="4">
+                    <option value="attack">Attack</option>
+                    <option value="defend">Defend</option>
+                </select>
+                <label for="5">5:</label>
+                <select id="5s" class="dice-option" name="5">
+                    <option value="attack">Attack</option>
+                    <option value="defend">Defend</option>
+                </select>
+                <label for="6">6:</label>
+                <select id="6s" class="dice-option" name="6">
+                    <option value="attack">Attack</option>
+                    <option value="defend">Defend</option>
                 </select>
                 <button class="backToDungeonSelect">Back</button>
             </div>

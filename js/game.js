@@ -3,7 +3,7 @@ import { dungeon_structs } from './dungeon.js';
 import { Inventory } from './inventory.js';
 import { Item } from './item.js';
 import { ITEM_TYPE } from './enums.js';
-import { refreshPlayerStats, RNG, updateAllCoinCounters } from './util.js';
+import { getRandomInt, refreshPlayerStats, RNG, updateAllCoinCounters } from './util.js';
 
 export const GAME_STATE = {
     player_turn: 0,
@@ -37,7 +37,7 @@ export let PLAYER = {
     xp: 0,
     level: 1,
     nextLevel: 500,
-    reset: function() {
+    reset: function () {
         this.health = 100;
         this.maxHealth = 100;
         this.coins = 10;
@@ -70,11 +70,12 @@ export class Game {
         this.dungeonContainer = document.getElementById("dungeon-container");
         this.diceContainer = document.getElementById("dice-container");
         this.controlContainer = document.getElementById("control-container");
-        this.settings = ["even", "odd"]; // attack, defense
+        this.settings = ["even", "odd", "attack", "attack", "attack", "attack"]; // attack, defense
         this.inventoryContainer = document.getElementById("inventory-container");
         this.inventoryGrid = document.getElementById("inventory-grid");
         this.dungeonElements = document.getElementsByClassName("dungeon");
         this.storeContainer = document.getElementById("store-container");
+        this.settingsContainer = document.getElementById("settings-container");
 
         this.diceController = new Dice(this.diceContainer);
         this.Inventory = new Inventory(this.inventoryGrid);
@@ -87,45 +88,239 @@ export class Game {
     }
 
     init() {
-        let dungeons = document.getElementsByClassName("dungeon");
+        this.toggleVisibility(this.startMenu, false);
+        this.toggleVisibility(this.menu, true);
 
-        this.startMenu.classList.add("hidden");
-        this.menu.classList.toggle("hidden");
+        this.createDungeonListeners();
+        this.createNavigationListeners();
+        this.createPlayerActionListeners();
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+                this.playerLevelUp();
+            }
+        });
+
+        refreshPlayerStats();
+    }
+
+    selectDungeon(dungeon) {
+        refreshPlayerStats();
+        this.dungeon = dungeon;
+
+        // Ensure correct visibility
+        this.toggleVisibility(this.menu, false);
+
+        this.toggleVisibility(this.combatContainer, true);
+        this.toggleVisibility(this.diceContainer, true);
+        this.toggleVisibility(this.controlContainer, true);
+
+        this.combatContainer.children[0].innerText = dungeon.name;
+        this.combatContainer.children[1].innerText = `0/${dungeon.enemies.length}`;
+
+        this.buildDungeon(dungeon);
+    }
+
+    buildDungeon(dungeon) {
+        this.setGameState(GAME_STATE.player_turn);
+        dungeon.enemies[0].createEnemy();
+    }
+
+    handleRoll(roll) {
+        if ((roll % 2 == 0 && this.settings[0] == "even") || (roll % 2 != 0 && this.settings[0] == "odd")) {
+            this.dungeon.enemies[this.dungeonEnemy].takeDamage(PLAYER.attack);
+        } else if ((roll % 2 != 0 && this.settings[1] == "odd") || (roll % 2 == 0 && this.settings[1] == "even")) {
+            PLAYER.blocking = true;
+        }
+
+        this.setGameState(GAME_STATE.enemy_turn);
+
+        if (this.dungeon.enemies[this.dungeonEnemy].health <= 0) {
+            PLAYER.xp += this.dungeon.enemies[this.dungeonEnemy].xp;
+
+            if (PLAYER.xp >= PLAYER.nextLevel) {
+                PLAYER.level++;
+                PLAYER.nextLevel = PLAYER.nextLevel + (PLAYER.nextLevel * 0.5);
+                this.playerLevelUp();
+            }
+
+            this.dungeonEnemy++;
+            this.combatContainer.children[1].innerText = `${this.dungeonEnemy}/${this.dungeon.enemies.length}`;
+
+            this.mobDrop();
+
+            if (this.dungeonEnemy >= this.dungeon.enemies.length) {
+                this.setGameState(GAME_STATE.battle_end);
+            } else {
+                this.dungeon.enemies[this.dungeonEnemy].createEnemy();
+                this.setGameState(GAME_STATE.player_turn);
+            }
+        } else {
+            if (!PLAYER.blocking) {
+                this.dungeon.enemies[this.dungeonEnemy].attackEnemy(PLAYER);
+
+                if (PLAYER.health <= 0) {
+                    PLAYER.isDead = true;
+                    this.triggerGameOver();
+                }
+            }
+            PLAYER.blocking = false;
+        }
+
+        this.setGameState(GAME_STATE.player_turn);
+        this.toggleVisibility(this.controlContainer, true); // Ensure roll button is visible
+        refreshPlayerStats();
+        console.log("roll: ", roll);
+    }
+
+    goBackToDungeonMenu() {
+        this.toggleVisibility(this.combatContainer, false);
+        this.toggleVisibility(this.diceContainer, false);
+        this.toggleVisibility(this.controlContainer, false);
+        this.toggleVisibility(this.menu, true);
+
+        this.dungeon = null;
+        this.dungeonEnemy = 0;
+        this.setGameState(GAME_STATE.menu);
+    }
+
+    triggerGameOver() {
+        this.toggleVisibility(this.combatContainer, false);
+        this.toggleVisibility(this.diceContainer, false);
+        this.toggleVisibility(this.controlContainer, false);
+
+        for (let i = 1; i < this.dungeonElements.length; i++) {
+            this.toggleVisibility(this.dungeonElements[i], true);
+        }
+
+        this.resetStats();
+
+        this.toggleVisibility(document.getElementById("game-over-container"), true);
+    }
+
+    triggerDungeonWin() {
+        if (RNG(75)) {
+            let pot = new Item(ITEM_TYPE.potion).generate();
+            this.Inventory.addItem(pot);
+            PLAYER.inventory.push(pot);
+        }
+
+        let drop = RNG(50) ? new Item(ITEM_TYPE.weapon).generate() : new Item(ITEM_TYPE.armor).generate();
+
+        this.toggleVisibility(this.combatContainer, false);
+        this.toggleVisibility(this.diceContainer, false);
+        this.toggleVisibility(this.controlContainer, false);
+
+        this.Inventory.addItem(drop);
+        PLAYER.inventory.push(drop);
+
+        this.toggleVisibility(document.getElementById("dungeon-over-container"), true);
+
+        if (PLAYER.xp >= PLAYER.nextLevel) {
+            PLAYER.level++;
+            PLAYER.nextLevel = PLAYER.nextLevel + (PLAYER.nextLevel * 0.5);
+        }
+
+        refreshPlayerStats();
+    }
+
+    showPlayerControls() {
+        console.log("Show controls");
+        this.toggleVisibility(this.controlContainer, true);
+    }
+
+    hidePlayerControls() {
+        this.toggleVisibility(this.controlContainer, false);
+    }
+
+    getGameState() {
+        return this.gameState;
+    }
+
+    resetStats() {
+        this.Inventory.clear();
+        PLAYER.reset();
+        this.nextDungeonUnlock = 0;
+        refreshPlayerStats();
+    }
+
+    playerLevelUp() {
+        PLAYER.attack += 5;
+        PLAYER.defense += 3;
+        PLAYER.maxHealth += 20;
+        PLAYER.health += getRandomInt(0, PLAYER.maxHealth * 0.02);
+        PLAYER.health = (PLAYER.health > PLAYER.maxHealth) ? PLAYER.maxHealth : PLAYER.health;
+        PLAYER.level++;
+
+        if (PLAYER.level % 5 == 0 && PLAYER.level <= 30) {
+            this.dungeonElements[this.nextDungeonUnlock].classList.remove("hidden");
+            this.nextDungeonUnlock++;
+            PLAYER.coins += 100;
+        }
+
+        if (PLAYER.level % 10 == 0) {
+            console.log("You have unlocked a new skill!");
+        }
+
+        refreshPlayerStats();
+    }
+    mobDrop() {
+        if (RNG(45)) {
+            let drop = RNG(50) ? new Item(ITEM_TYPE.weapon).generate() : new Item(ITEM_TYPE.armor).generate();
+            this.Inventory.addItem(drop);
+            PLAYER.inventory.push(drop);
+        } else if (RNG(45)) {
+            let pot = new Item(ITEM_TYPE.potion).generate();
+            this.Inventory.addItem(pot);
+            PLAYER.inventory.push(pot);
+        }
+    }
+
+    toggleVisibility(element, isVisible) {
+        if (isVisible) {
+            element.classList.remove("hidden");
+        } else {
+            element.classList.add("hidden");
+        }
+    }
+
+    setGameState(newState) {
+        this.gameState = newState;
+        switch (newState) {
+            case GAME_STATE.player_turn:
+                this.toggleVisibility(this.controlContainer, true);
+                break;
+            case GAME_STATE.enemy_turn:
+                this.toggleVisibility(this.controlContainer, false);
+                break;
+            case GAME_STATE.battle_end:
+                this.triggerDungeonWin();
+                break;
+            case GAME_STATE.menu:
+                this.goBackToDungeonMenu();
+                break;
+        }
+    }
+
+    createDungeonListeners() {
+        let dungeons = document.getElementsByClassName("dungeon");
 
         for (let d of dungeons) {
             d.addEventListener('click', () => {
                 this.selectDungeon(dungeon_structs[d.attributes[2].value]);
             });
         }
+    }
 
-        this.controlContainer.children[0].addEventListener("click", () => {
-            if (this.gameState != GAME_STATE.player_turn) return;
-            this.currentRoll = this.diceController.roll();
-            this.handleRoll(this.currentRoll);
-            this.controlContainer.classList.toggle("hidden");
-        });
-
-        document.getElementById("bindAttacks").addEventListener("click", () => {
-            this.menu.classList.toggle("hidden");
-            document.getElementById("settings-container").classList.toggle("hidden");
-        });
-
-        document.getElementById("attack-settings").addEventListener("change", () => {
-            this.settings[0] = document.getElementById("attack-settings").value;
-        });
-
-        document.getElementById("defense-settings").addEventListener("change", () => {
-            this.settings[1] = document.getElementById("defense-settings").value;
-        });
-
+    createNavigationListeners() {
         document.getElementById("inventoryGo").addEventListener("click", () => {
-            this.menu.classList.toggle("hidden");
-            this.inventoryContainer.classList.toggle("hidden");
+            this.toggleVisibility(this.menu, false);
+            this.toggleVisibility(this.inventoryContainer, true);
         });
 
         document.getElementById("storeGo").addEventListener("click", () => {
-            this.menu.classList.toggle("hidden");
-            this.storeContainer.classList.toggle("hidden");
+            this.toggleVisibility(this.storeContainer, true);
+            this.toggleVisibility(this.menu, false);
 
             document.getElementById("store-coins").innerText = PLAYER.coins;
         })
@@ -134,10 +329,9 @@ export class Game {
             element.addEventListener("click", () => {
                 this.dungeon = null;
                 this.dungeonEnemy = 0;
-                this.gameState = GAME_STATE.menu;
-
-                this.menu.classList.toggle("hidden");
-                element.parentElement.classList.toggle("hidden");
+                this.setGameState(GAME_STATE.menu);
+                this.toggleVisibility(this.menu, true)
+                this.toggleVisibility(element.parentElement, false);
             });
         }
 
@@ -145,6 +339,26 @@ export class Game {
             element.addEventListener("click", () => {
                 element.parentElement.classList.add("hidden");
                 this.goBackToDungeonMenu();
+            });
+        }
+
+        document.getElementById("bindAttacks").addEventListener("click", () => {
+            this.toggleVisibility(this.menu, false);
+            this.toggleVisibility(this.settingsContainer, true);
+        });
+    }
+
+    createPlayerActionListeners() {
+        this.controlContainer.children[0].addEventListener("click", () => {
+            if (this.gameState != GAME_STATE.player_turn) return;
+            this.currentRoll = this.diceController.roll();
+            this.handleRoll(this.currentRoll);
+        });
+
+        for (const element of document.getElementsByClassName("dice-option")) {
+            element.addEventListener("change", (e) => {
+                console.log(e.target.value);
+                console.log(Number(element.attributes[2].value));
             });
         }
 
@@ -157,168 +371,6 @@ export class Game {
                 refreshPlayerStats();
                 updateAllCoinCounters();
             });
-        }
-
-        refreshPlayerStats();
-    }
-
-    selectDungeon(dungeon) {
-        refreshPlayerStats();
-        this.gameState = GAME_STATE.player_turn;
-        this.dungeon = dungeon;
-    
-        // Ensure correct visibility
-        this.menu.classList.add("hidden");
-        
-        this.combatContainer.classList.remove("hidden");
-        this.diceContainer.classList.remove("hidden");
-        this.controlContainer.classList.remove("hidden");
-    
-        this.combatContainer.children[0].innerText = dungeon.name;
-        this.combatContainer.children[1].innerText = `0/${dungeon.enemies.length}`;
-    
-        this.buildDungeon(dungeon);
-    }
-
-    buildDungeon(dungeon) {
-        this.gameState = GAME_STATE.player_turn;
-        dungeon.enemies[0].createEnemy();
-    }
-
-    handleRoll(roll) {
-        if ((roll % 2 == 0 && this.settings[0] == "even") || (roll % 2 != 0 && this.settings[0] == "odd")) {
-            this.dungeon.enemies[this.dungeonEnemy].takeDamage(PLAYER.attack);
-        } else if ((roll % 2 != 0 && this.settings[1] == "odd") || (roll % 2 == 0 && this.settings[1] == "even")) {
-            PLAYER.blocking = true;
-        }
-
-        this.GAME_STATE = GAME_STATE.enemy_turn;
-
-        if (this.dungeon.enemies[this.dungeonEnemy].health <= 0) {
-            PLAYER.xp += this.dungeon.enemies[this.dungeonEnemy].xp;
-
-            if (PLAYER.xp >= PLAYER.nextLevel) {    
-                PLAYER.level++;
-                PLAYER.nextLevel = PLAYER.nextLevel + (PLAYER.nextLevel * 0.5);
-                this.playerLevelUp();
-            }
-
-            this.dungeonEnemy++;
-            this.combatContainer.children[1].innerText = `${this.dungeonEnemy}/${this.dungeon.enemies.length}`;
-
-            if (RNG(45)) {
-                let drop = RNG(50) ? new Item(ITEM_TYPE.weapon).generate() : new Item(ITEM_TYPE.armor).generate();
-                this.Inventory.addItem(drop);
-                PLAYER.inventory.push(drop);
-            } else if (RNG(45)) {
-                let pot = new Item(ITEM_TYPE.potion).generate();
-                this.Inventory.addItem(pot);
-                PLAYER.inventory.push(pot);
-            }
-
-            if (this.dungeonEnemy >= this.dungeon.enemies.length) {
-                this.gameState = GAME_STATE.battle_end;
-                this.triggerDungeonWin();
-            } else {
-                this.dungeon.enemies[this.dungeonEnemy].createEnemy();
-                this.gameState = GAME_STATE.player_turn;
-                this.showPlayerControls();
-            }
-        } else {
-            if (!PLAYER.blocking) {
-                this.dungeon.enemies[this.dungeonEnemy].attackEnemy(PLAYER);
-                refreshPlayerStats();
-
-                if (PLAYER.health <= 0) {
-                    PLAYER.isDead = true;
-                    this.triggerGameOver();
-                }
-            }
-            this.gameState = GAME_STATE.player_turn;
-            PLAYER.blocking = false;
-            this.showPlayerControls();
-        }
-        refreshPlayerStats();
-    }
-
-    goBackToDungeonMenu() {
-        this.combatContainer.classList.add("hidden");
-        this.diceContainer.classList.add("hidden");
-        this.controlContainer.classList.add("hidden");
-        this.menu.classList.remove("hidden");
-
-        this.dungeon = null;
-        this.dungeonEnemy = 0;
-        this.gameState = GAME_STATE.menu;
-    }
-
-    triggerGameOver() {
-        this.combatContainer.classList.add("hidden");
-        this.diceContainer.classList.add("hidden");
-        this.controlContainer.classList.add("hidden");
-    
-        this.resetStats();
-
-        document.getElementById("game-over-container").classList.remove("hidden");
-    }
-
-    triggerDungeonWin() {
-        if (RNG(75)) {
-            let pot = new Item(ITEM_TYPE.potion).generate();
-            this.Inventory.addItem(pot);
-            PLAYER.inventory.push(pot);
-        }
-
-        let drop = RNG(50) ? new Item(ITEM_TYPE.weapon).generate() : new Item(ITEM_TYPE.armor).generate();
-
-        this.combatContainer.classList.add("hidden");
-        this.diceContainer.classList.add("hidden");
-        this.controlContainer.classList.add("hidden");
-    
-        this.Inventory.addItem(drop);
-        PLAYER.inventory.push(drop);
-    
-        document.getElementById("dungeon-over-container").classList.remove("hidden");
-
-        if (PLAYER.xp >= PLAYER.nextLevel) {    
-            PLAYER.level++;
-            PLAYER.nextLevel = PLAYER.nextLevel + (PLAYER.nextLevel * 0.5);
-        }
-
-        refreshPlayerStats();
-    }
-
-    showPlayerControls() {
-        this.controlContainer.classList.toggle("hidden");
-    }
-
-    hidePlayerControls() {
-        this.controlContainer.classList.toggle("hidden");
-    }
-
-    getGameState() {
-        return this.gameState;
-    }
-
-    resetStats() {
-        PLAYER.xp = 0;
-        PLAYER.level = 1;
-        PLAYER.health = 100;
-
-        this.Inventory.clear();
-        refreshPlayerStats();
-    }
-
-    playerLevelUp() {
-        PLAYER.attack += 2;
-        PLAYER.defense += 1;
-        PLAYER.maxHealth += 20;
-
-        refreshPlayerStats();
-
-        if (PLAYER.level % 5 == 0 && PLAYER.level <= 30) {
-            this.dungeonElements[this.nextDungeonUnlock].classList.remove("hidden");
-            this.nextDungeonUnlock++;
         }
     }
 }
