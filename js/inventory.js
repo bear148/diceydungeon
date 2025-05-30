@@ -200,6 +200,11 @@ export class Inventory {
 
     spellEquip(spell) {
         let options = document.getElementsByClassName("dice-option");
+
+        document.getElementById("equipped-spells").innerHTML += `
+        <p><span class="espell">${spell.name} ${spell.stats.amount}</span></p>
+        `;
+
         for (let i = 0; i < options.length; i++) {
             let spellOption = document.createElement("option");
             spellOption.value = (PLAYER.skills.length > 0) ? PLAYER.skills.length-1 : 0;

@@ -101,9 +101,11 @@ export class Game {
             }
         });
 
-        if (RNG(10)) {
-            this.unlockSkill();
-        }
+        // if (RNG(10)) {
+        //     this.unlockSkill();
+        // }
+
+        this.unlockSkill();
 
         refreshPlayerStats();
     }
@@ -139,7 +141,7 @@ export class Game {
                 PLAYER.blocking = true;
                 break;
             default:
-
+                console.log(PLAYER.skills[this.settings[roll - 1]].stats.amount);
                 this.dungeon.enemies[this.dungeonEnemy].takeDamage(PLAYER.skills[this.settings[roll - 1]].stats.amount);
                 break;
         }

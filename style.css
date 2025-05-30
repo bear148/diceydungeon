@@ -380,7 +380,7 @@ img {
 }
 
 #def {
-    color: rgb(0, 0, 255);
+    color: rgb(94, 94, 255);
 }
 
 #atk {
@@ -486,4 +486,19 @@ img[src*="placeholder"] {
 [alt="Russia"] {
     width: 100px;
     height: 100px;
+}
+
+.column {
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.row {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.settings-container-style {
+    width: 500px;
+    justify-content: space-around;
 }

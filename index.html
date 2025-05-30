@@ -133,36 +133,44 @@
             </div>
             <div id="settings-container" class="hidden">
                 <h1>Settings</h1>
-                <label for="1">1:</label>
-                <select id="1s" class="dice-option" name="1">
-                    <option value="attack" selected="selected">Attack</option>
-                    <option value="defend">Defend</option>
-                </select>
-                <label for="2">2:</label>
-                <select id="2s" class="dice-option" name="2">
-                    <option value="attack">Attack</option>
-                    <option value="defend" selected="selected">Defend</option>
-                </select>
-                <label for="3">3:</label>
-                <select id="3s" class="dice-option" name="3">
-                    <option value="attack" selected="selected">Attack</option>
-                    <option value="defend">Defend</option>
-                </select>
-                <label for="4">4:</label>
-                <select id="4s" class="dice-option" name="4">
-                    <option value="attack">Attack</option>
-                    <option value="defend" selected="selected">Defend</option>
-                </select>
-                <label for="5">5:</label>
-                <select id="5s" class="dice-option" name="5">
-                    <option value="attack" selected="selected">Attack</option>
-                    <option value="defend">Defend</option>
-                </select>
-                <label for="6">6:</label>
-                <select id="6s" class="dice-option" name="6">
-                    <option value="attack">Attack</option>
-                    <option value="defend" selected="selected">Defend</option>
-                </select>
+                <div class="row settings-container-style">
+                    <div id="equipped-spells">
+                        <h2>Spells</h2>
+                    </div>
+                    <div class="column">
+                        <h2>Die Bindings</h2>
+                        <label for="1">1:</label>
+                        <select id="1s" class="dice-option" name="1">
+                            <option value="attack" selected="selected">Attack</option>
+                            <option value="defend">Defend</option>
+                        </select>
+                        <label for="2">2:</label>
+                        <select id="2s" class="dice-option" name="2">
+                            <option value="attack">Attack</option>
+                            <option value="defend" selected="selected">Defend</option>
+                        </select>
+                        <label for="3">3:</label>
+                        <select id="3s" class="dice-option" name="3">
+                            <option value="attack" selected="selected">Attack</option>
+                            <option value="defend">Defend</option>
+                        </select>
+                        <label for="4">4:</label>
+                        <select id="4s" class="dice-option" name="4">
+                            <option value="attack">Attack</option>
+                            <option value="defend" selected="selected">Defend</option>
+                        </select>
+                        <label for="5">5:</label>
+                        <select id="5s" class="dice-option" name="5">
+                            <option value="attack" selected="selected">Attack</option>
+                            <option value="defend">Defend</option>
+                        </select>
+                        <label for="6">6:</label>
+                        <select id="6s" class="dice-option" name="6">
+                            <option value="attack">Attack</option>
+                            <option value="defend" selected="selected">Defend</option>
+                        </select>
+                    </div>
+                </div>
                 <button class="backToDungeonSelect">Back</button>
             </div>
             <div id="game-over-container" class="hidden">
