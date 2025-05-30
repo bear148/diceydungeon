@@ -101,11 +101,9 @@ export class Game {
             }
         });
 
-        // if (RNG(10)) {
-        //     this.unlockSkill();
-        // }
-
-        this.unlockSkill();
+        if (RNG(10)) {
+            this.unlockSkill();
+        }
 
         refreshPlayerStats();
     }
