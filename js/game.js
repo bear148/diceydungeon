@@ -246,8 +246,6 @@ export class Game {
         PLAYER.attack += 5;
         PLAYER.defense += 3;
         PLAYER.maxHealth += 20;
-        PLAYER.health += getRandomInt(0, PLAYER.maxHealth * 0.02);
-        PLAYER.health = (PLAYER.health > PLAYER.maxHealth) ? PLAYER.maxHealth : PLAYER.health;
         PLAYER.level++;
 
         if (PLAYER.level % 5 == 0 && PLAYER.level <= 30) {
