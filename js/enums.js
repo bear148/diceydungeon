@@ -2,6 +2,7 @@ export const ITEM_TYPE = {
     weapon: 1,
     armor: 2,
     potion: 3,
+    spell: 4,
 }
 
 export const ARMOR_TYPE = {

@@ -70,7 +70,7 @@ export class Game {
         this.dungeonContainer = document.getElementById("dungeon-container");
         this.diceContainer = document.getElementById("dice-container");
         this.controlContainer = document.getElementById("control-container");
-        this.settings = ["even", "odd", "attack", "attack", "attack", "attack"]; // attack, defense
+        this.settings = ["attack", "defense", "attack", "defense", "attack", "defense"]; // attack, defense
         this.inventoryContainer = document.getElementById("inventory-container");
         this.inventoryGrid = document.getElementById("inventory-grid");
         this.dungeonElements = document.getElementsByClassName("dungeon");
@@ -101,6 +101,10 @@ export class Game {
             }
         });
 
+        if (RNG(10)) {
+            this.unlockSkill();
+        }
+
         refreshPlayerStats();
     }
 
@@ -127,10 +131,17 @@ export class Game {
     }
 
     handleRoll(roll) {
-        if ((roll % 2 == 0 && this.settings[0] == "even") || (roll % 2 != 0 && this.settings[0] == "odd")) {
-            this.dungeon.enemies[this.dungeonEnemy].takeDamage(PLAYER.attack);
-        } else if ((roll % 2 != 0 && this.settings[1] == "odd") || (roll % 2 == 0 && this.settings[1] == "even")) {
-            PLAYER.blocking = true;
+        switch(this.settings[roll - 1]) {
+            case "attack":
+                this.dungeon.enemies[this.dungeonEnemy].takeDamage(PLAYER.attack);
+                break;
+            case "defense":
+                PLAYER.blocking = true;
+                break;
+            default:
+
+                this.dungeon.enemies[this.dungeonEnemy].takeDamage(PLAYER.skills[this.settings[roll - 1]].stats.amount);
+                break;
         }
 
         this.setGameState(GAME_STATE.enemy_turn);
@@ -170,7 +181,6 @@ export class Game {
         this.setGameState(GAME_STATE.player_turn);
         this.toggleVisibility(this.controlContainer, true); // Ensure roll button is visible
         refreshPlayerStats();
-        console.log("roll: ", roll);
     }
 
     goBackToDungeonMenu() {
@@ -181,21 +191,10 @@ export class Game {
 
         this.dungeon = null;
         this.dungeonEnemy = 0;
-        this.setGameState(GAME_STATE.menu);
     }
 
     triggerGameOver() {
-        this.toggleVisibility(this.combatContainer, false);
-        this.toggleVisibility(this.diceContainer, false);
-        this.toggleVisibility(this.controlContainer, false);
-
-        for (let i = 1; i < this.dungeonElements.length; i++) {
-            this.toggleVisibility(this.dungeonElements[i], true);
-        }
-
-        this.resetStats();
-
-        this.toggleVisibility(document.getElementById("game-over-container"), true);
+        location.reload();
     }
 
     triggerDungeonWin() {
@@ -225,7 +224,6 @@ export class Game {
     }
 
     showPlayerControls() {
-        console.log("Show controls");
         this.toggleVisibility(this.controlContainer, true);
     }
 
@@ -259,7 +257,7 @@ export class Game {
         }
 
         if (PLAYER.level % 10 == 0) {
-            console.log("You have unlocked a new skill!");
+            this.unlockSkill();
         }
 
         refreshPlayerStats();
@@ -273,6 +271,10 @@ export class Game {
             let pot = new Item(ITEM_TYPE.potion).generate();
             this.Inventory.addItem(pot);
             PLAYER.inventory.push(pot);
+        } else if (RNG(5)) {
+            let skill = new Item(ITEM_TYPE.spell).generate();
+            PLAYER.skills.push(skill);
+            this.Inventory.addItem(skill);
         }
     }
 
@@ -329,16 +331,15 @@ export class Game {
             element.addEventListener("click", () => {
                 this.dungeon = null;
                 this.dungeonEnemy = 0;
-                this.setGameState(GAME_STATE.menu);
-                this.toggleVisibility(this.menu, true)
                 this.toggleVisibility(element.parentElement, false);
+                this.setGameState(GAME_STATE.menu);
             });
         }
 
         for (const element of document.getElementsByClassName("backToDungeonSelect")) {
             element.addEventListener("click", () => {
-                element.parentElement.classList.add("hidden");
-                this.goBackToDungeonMenu();
+                this.toggleVisibility(element.parentElement, false);
+                this.setGameState(GAME_STATE.menu);
             });
         }
 
@@ -357,8 +358,7 @@ export class Game {
 
         for (const element of document.getElementsByClassName("dice-option")) {
             element.addEventListener("change", (e) => {
-                console.log(e.target.value);
-                console.log(Number(element.attributes[2].value));
+                this.settings[Number(element.attributes[2].value - 1)] = (isNaN(Number(e.target.value))) ? e.target.value : Number(e.target.value);
             });
         }
 
@@ -372,5 +372,11 @@ export class Game {
                 updateAllCoinCounters();
             });
         }
+    }
+
+    unlockSkill() {
+        let skill = new Item(ITEM_TYPE.spell).generate();
+        PLAYER.skills.push(skill);
+        this.Inventory.addItem(skill);
     }
 }

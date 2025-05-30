@@ -21,7 +21,7 @@ export class Enemy {
     createEnemy() {
         this.element = document.getElementById("enemy-sprite-container")
         this.health = this.startingHealth;
-        this.health = this.health + (PLAYER.level * 10);
+        if (!PLAYER.level <= 1) this.health = this.health + (PLAYER.level * 10);
 
         this.attack = (this.attack >= 1800) ? 1800 : this.startingAttack + (PLAYER.level * 2);
         this.defense = this.startingDefense + (PLAYER.level * 2);
@@ -60,9 +60,7 @@ export class Enemy {
     attackEnemy(target) {
         let damage = getRandomInt(0, this.attack - (target.defense * 0.1));
 
-        if (damage < 0) {
-            damage = 0;
-        }
+        if (damage <= 0) damage = 1;
         
         target.health -= (damage);
         document.getElementById("health").innerText = target.health;

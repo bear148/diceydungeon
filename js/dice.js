@@ -8,7 +8,7 @@ export class Dice {
     }
 
     roll() {
-        const r = getRandomInt(1, 6);
+        const r = getRandomInt(1, 7);
 
         new Audio(`/assets/dice/dice${getRandomInt(1, 2)}.mp3`).play();
 

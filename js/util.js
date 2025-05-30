@@ -23,6 +23,36 @@ export function getRandomWeaponImage() {
 	return weapons[Math.floor(Math.random() * weapons.length)];
 }
 
+export function getRandomSpellImage() {
+	const spells = [
+		"/assets/spells/scroll1.png",
+		"/assets/spells/scroll2.png",
+		"/assets/spells/scroll3.png",
+		"/assets/spells/scroll4.png",
+		"/assets/spells/scroll5.png",
+		"/assets/spells/scroll6.png",
+		"/assets/spells/scroll7.png",
+		"/assets/spells/scroll8.png",
+	];
+
+	return spells[Math.floor(Math.random() * spells.length)];
+}
+
+export function getRandomSpellName() {
+	const spellNames = [
+		"Fireball",
+		"Ice Spike",
+		"Lightning Bolt",
+		"Earthquake",
+		"Wind Slash",
+		"Water Wave",
+		"Shadow Strike",
+		"Arcane Blast",
+	];
+
+	return spellNames[Math.floor(Math.random() * spellNames.length)];
+}
+
 export function getRandomArmorType() {
 	const types = [
 		ARMOR_TYPE.head,

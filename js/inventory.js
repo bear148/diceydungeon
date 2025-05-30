@@ -37,8 +37,6 @@ export class Inventory {
         useButton.addEventListener("click", () => {
             if (!this.currentItem) return;
 
-            console.log("Using item:", this.currentItem);
-
             if (this.currentItem.type === ITEM_TYPE.potion) {
                 PLAYER.health += this.currentItem.stats.amount;
                 if (PLAYER.health > PLAYER.maxHealth) PLAYER.health = PLAYER.maxHealth;
@@ -49,8 +47,9 @@ export class Inventory {
             } else if (this.currentItem.type === ITEM_TYPE.weapon) {
                 this.equip("hand", this.currentItem);
                 PLAYER.attack += this.currentItem.stats.amount;
+            } else if (this.currentItem.type === ITEM_TYPE.spell) {
+                this.spellEquip(this.currentItem);
             }
-            console.log(PLAYER)
             if (this.currentItemElement) {
                 this.currentItemElement.remove();
             }
@@ -196,6 +195,16 @@ export class Inventory {
                 PLAYER.weapon = this.currentItem;
 
                 break;
+        }
+    }
+
+    spellEquip(spell) {
+        let options = document.getElementsByClassName("dice-option");
+        for (let i = 0; i < options.length; i++) {
+            let spellOption = document.createElement("option");
+            spellOption.value = (PLAYER.skills.length > 0) ? PLAYER.skills.length-1 : 0;
+            spellOption.textContent = spell.name;
+            options[i].appendChild(spellOption);
         }
     }
 
