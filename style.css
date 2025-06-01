@@ -306,7 +306,7 @@ img {
 }
 
 .rare {
-    color: rgb(17, 0, 255);
+    color: rgb(80, 80, 255);
 }
 
 .epic {
@@ -359,6 +359,8 @@ img {
 
 #armor-grid {
     display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
 }
 
 .backToDungeonSelect {
@@ -380,7 +382,7 @@ img {
 }
 
 #def {
-    color: rgb(94, 94, 255);
+    color: rgb(80, 80, 255);
 }
 
 #atk {
@@ -501,4 +503,11 @@ img[src*="placeholder"] {
 .settings-container-style {
     width: 500px;
     justify-content: space-around;
+}
+
+.armor-grid-item {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
 }

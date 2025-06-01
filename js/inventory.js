@@ -15,6 +15,7 @@ export class Inventory {
         this.itemPopup = document.getElementById("item-menu");
 
         this.eqiuppedArmor = document.getElementsByClassName("armor");
+        this.statElements = document.getElementsByClassName("stat");
 
         this.init();
     }
@@ -138,6 +139,8 @@ export class Inventory {
         switch (loc) {
             case "head":
                 this.eqiuppedArmor[0].src = this.currentItem.icon;
+                this.statElements[0].innerHTML = `Armor: ${this.currentItem.stats.amount}`
+                this.statElements[0].className = `stat ${this.currentItem.rarity.rarityName}`
                 if (!PLAYER.armor.head) {
                     PLAYER.armor.head = this.currentItem;
                     break;
@@ -145,46 +148,47 @@ export class Inventory {
                 this.addItem(PLAYER.armor.head);
                 PLAYER.defense -= PLAYER.armor.head.stats.amount;
                 PLAYER.armor.head = this.currentItem;
-
                 break;
             case "chest":
                 this.eqiuppedArmor[1].src = this.currentItem.icon;
+                this.statElements[1].innerHTML = `Armor: ${this.currentItem.stats.amount}`
+                this.statElements[1].className = `stat ${this.currentItem.rarity.rarityName}`
                 if (!PLAYER.armor.chest) {
                     PLAYER.armor.chest = this.currentItem;
-
                     break;
                 }
                 this.addItem(PLAYER.armor.chest);
                 PLAYER.defense -= PLAYER.armor.chest.stats.amount;
                 PLAYER.armor.chest = this.currentItem;
-
                 break;
             case "boots":
                 this.eqiuppedArmor[2].src = this.currentItem.icon;
+                this.statElements[2].innerHTML = `Armor: ${this.currentItem.stats.amount}`
+                this.statElements[2].className = `stat ${this.currentItem.rarity.rarityName}`
                 if (!PLAYER.armor.boots) {
                     PLAYER.armor.boots = this.currentItem;
-
                     break;
                 }
                 this.addItem(PLAYER.armor.boots);
                 PLAYER.defense -= PLAYER.armor.boots.stats.amount;
                 PLAYER.armor.boots = this.currentItem;
-
                 break;
             case "gloves":
                 this.eqiuppedArmor[3].src = this.currentItem.icon;
+                this.statElements[3].innerHTML = `Armor: ${this.currentItem.stats.amount}`
+                this.statElements[3].className = `stat ${this.currentItem.rarity.rarityName}`
                 if (!PLAYER.armor.gloves) {
                     PLAYER.armor.gloves = this.currentItem;
-
                     break;
                 }
                 this.addItem(PLAYER.armor.gloves);
                 PLAYER.defense -= PLAYER.armor.gloves.stats.amount;
                 PLAYER.armor.gloves = this.currentItem;
-
                 break;
             case "hand":
                 document.getElementById("hands-image").src = this.currentItem.icon;
+                this.statElements[4].innerHTML = `Damage: ${this.currentItem.stats.amount}`;
+                this.statElements[4].className = `stat ${this.currentItem.rarity.rarityName}`
                 if (!PLAYER.weapon) {
                     PLAYER.weapon = this.currentItem;
 
@@ -193,7 +197,6 @@ export class Inventory {
                 this.addItem(PLAYER.weapon);
                 PLAYER.attack -= PLAYER.weapon.stats.amount;
                 PLAYER.weapon = this.currentItem;
-
                 break;
         }
     }
@@ -202,13 +205,13 @@ export class Inventory {
         let options = document.getElementsByClassName("dice-option");
 
         document.getElementById("equipped-spells").innerHTML += `
-        <p><span class="espell">${spell.name} ${spell.stats.amount}</span></p>
+        <p><span class="espell ${spell.rarity.rarityName}">${spell.name} ${spell.stats.amount}</span></p>
         `;
 
         for (let i = 0; i < options.length; i++) {
             let spellOption = document.createElement("option");
             spellOption.value = (PLAYER.skills.length > 0) ? PLAYER.skills.length-1 : 0;
-            spellOption.textContent = spell.name;
+            spellOption.textContent = `${spell.name}: ${spell.stats.amount}`;
             options[i].appendChild(spellOption);
         }
     }

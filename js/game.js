@@ -258,6 +258,8 @@ export class Game {
             this.unlockSkill();
         }
 
+        PLAYER.nextLevel += PLAYER.nextLevel * 0.75;
+
         refreshPlayerStats();
     }
     mobDrop() {
