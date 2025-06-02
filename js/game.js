@@ -226,7 +226,7 @@ export class Game {
             PLAYER.nextLevel = PLAYER.nextLevel + (PLAYER.nextLevel * 0.5);
         }
 
-        refreshPlayerStats();
+        refreshPlayerStats(); 
     }
 
     showPlayerControls() {
