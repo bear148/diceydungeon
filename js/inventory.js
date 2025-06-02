@@ -51,6 +51,7 @@ export class Inventory {
             } else if (this.currentItem.type === ITEM_TYPE.spell) {
                 this.spellEquip(this.currentItem);
             }
+
             if (this.currentItemElement) {
                 this.currentItemElement.remove();
             }
@@ -78,8 +79,13 @@ export class Inventory {
             let content = `
                 <p class="item-title">${item.name}</p>
                 <p class="item-stat">${item.stats.type}: ${item.stats.amount}</p>
-                <p class="item-rarity ${item.rarity.rarityName}">${item.rarity.rarityName}</p>
             `;
+
+            if (item.type === ITEM_TYPE.weapon) {
+                content += `<p class="item-speed">Speed: ${item.stats.speed[1]}</p>`;
+            }
+
+            content += `<p class="item-rarity ${item.rarity.rarityName}">${item.rarity.rarityName}</p>`;
 
             showTooltip(content, event.clientX, event.clientY);
         });
@@ -139,8 +145,8 @@ export class Inventory {
         switch (loc) {
             case "head":
                 this.eqiuppedArmor[0].src = this.currentItem.icon;
-                this.statElements[0].innerHTML = `Armor: ${this.currentItem.stats.amount}`
-                this.statElements[0].className = `stat ${this.currentItem.rarity.rarityName}`
+                this.statElements[0].innerHTML = `Armor: ${this.currentItem.stats.amount}`;
+                this.statElements[0].className = `stat ${this.currentItem.rarity.rarityName}`;
                 if (!PLAYER.armor.head) {
                     PLAYER.armor.head = this.currentItem;
                     break;
@@ -151,8 +157,8 @@ export class Inventory {
                 break;
             case "chest":
                 this.eqiuppedArmor[1].src = this.currentItem.icon;
-                this.statElements[1].innerHTML = `Armor: ${this.currentItem.stats.amount}`
-                this.statElements[1].className = `stat ${this.currentItem.rarity.rarityName}`
+                this.statElements[1].innerHTML = `Armor: ${this.currentItem.stats.amount}`;
+                this.statElements[1].className = `stat ${this.currentItem.rarity.rarityName}`;
                 if (!PLAYER.armor.chest) {
                     PLAYER.armor.chest = this.currentItem;
                     break;
@@ -163,8 +169,8 @@ export class Inventory {
                 break;
             case "boots":
                 this.eqiuppedArmor[2].src = this.currentItem.icon;
-                this.statElements[2].innerHTML = `Armor: ${this.currentItem.stats.amount}`
-                this.statElements[2].className = `stat ${this.currentItem.rarity.rarityName}`
+                this.statElements[2].innerHTML = `Armor: ${this.currentItem.stats.amount}`;
+                this.statElements[2].className = `stat ${this.currentItem.rarity.rarityName}`;
                 if (!PLAYER.armor.boots) {
                     PLAYER.armor.boots = this.currentItem;
                     break;
@@ -175,8 +181,8 @@ export class Inventory {
                 break;
             case "gloves":
                 this.eqiuppedArmor[3].src = this.currentItem.icon;
-                this.statElements[3].innerHTML = `Armor: ${this.currentItem.stats.amount}`
-                this.statElements[3].className = `stat ${this.currentItem.rarity.rarityName}`
+                this.statElements[3].innerHTML = `Armor: ${this.currentItem.stats.amount}`;
+                this.statElements[3].className = `stat ${this.currentItem.rarity.rarityName}`;
                 if (!PLAYER.armor.gloves) {
                     PLAYER.armor.gloves = this.currentItem;
                     break;
@@ -188,10 +194,10 @@ export class Inventory {
             case "hand":
                 document.getElementById("hands-image").src = this.currentItem.icon;
                 this.statElements[4].innerHTML = `Damage: ${this.currentItem.stats.amount}`;
-                this.statElements[4].className = `stat ${this.currentItem.rarity.rarityName}`
+                this.statElements[4].className = `stat ${this.currentItem.rarity.rarityName}`;
+                PLAYER.speed = this.currentItem.stats.speed[0];
                 if (!PLAYER.weapon) {
                     PLAYER.weapon = this.currentItem;
-
                     break;
                 }
                 this.addItem(PLAYER.weapon);

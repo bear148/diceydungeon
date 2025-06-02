@@ -50,6 +50,7 @@ export class Item {
                 this.stats = {
                     type: "Damage",
                     amount: getRandomInt(1, 8) * this.rarityID,
+                    speed: this.getRandomSpeed(),
                 }
                 break;
             case ITEM_TYPE.potion: {
@@ -111,6 +112,23 @@ export class Item {
                 return "exalted";
             default:
                 return "programmer sux lol";
+        }
+    }
+
+    getRandomSpeed() {
+        let rng = getRandomInt(0, 101);
+        if (rng <= 50) {
+            return [1000, "Normal"];
+        } else if (rng > 50 && rng <= 75) {
+            return [800, "Quick"];
+        } else if (rng > 75 && rng <= 90) {
+            return [650, "Fast"];
+        } else if (rng > 90 && rng <= 97) {
+            return [450, "Swift"];
+        } else if (rng > 97 && rng <= 99) {
+            return [300, "Very Fast"];
+        } else {
+            return [150, "Lightning Fast"];
         }
     }
 }

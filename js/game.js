@@ -22,7 +22,7 @@ export let PLAYER = {
     coins: 10,
     attack: 5,
     defense: 0,
-    speed: 1,
+    speed: 1000, // time (in ms) between attacks for auto attack
     skills: [],
     inventory: [],
     blocking: false,
@@ -76,6 +76,7 @@ export class Game {
         this.dungeonElements = document.getElementsByClassName("dungeon");
         this.storeContainer = document.getElementById("store-container");
         this.settingsContainer = document.getElementById("settings-container");
+        this.autoAttackButton = document.getElementById("auto-attack-button");
 
         this.diceController = new Dice(this.diceContainer);
         this.Inventory = new Inventory(this.inventoryGrid);
@@ -83,6 +84,9 @@ export class Game {
         this.dungeon = null;
         this.dungeonEnemy = 0;
         this.nextDungeonUnlock = 1;
+
+        this.autoAttackInterval = null;
+        this.currentRoll = null;
 
         this.init();
     }
@@ -131,7 +135,7 @@ export class Game {
     }
 
     handleRoll(roll) {
-        switch(this.settings[roll - 1]) {
+        switch (this.settings[roll - 1]) {
             case "attack":
                 this.dungeon.enemies[this.dungeonEnemy].takeDamage(PLAYER.attack);
                 break;
@@ -188,6 +192,8 @@ export class Game {
         this.toggleVisibility(this.diceContainer, false);
         this.toggleVisibility(this.controlContainer, false);
         this.toggleVisibility(this.menu, true);
+
+        this.stopAutoAttack();
 
         this.dungeon = null;
         this.dungeonEnemy = 0;
@@ -262,6 +268,7 @@ export class Game {
 
         refreshPlayerStats();
     }
+
     mobDrop() {
         if (RNG(45)) {
             let drop = RNG(50) ? new Item(ITEM_TYPE.weapon).generate() : new Item(ITEM_TYPE.armor).generate();
@@ -350,7 +357,8 @@ export class Game {
     }
 
     createPlayerActionListeners() {
-        this.controlContainer.children[0].addEventListener("click", () => {
+        this.controlContainer.children[1].addEventListener("click", () => {
+            console.log("Roll button clicked");
             if (this.gameState != GAME_STATE.player_turn) return;
             this.currentRoll = this.diceController.roll();
             this.handleRoll(this.currentRoll);
@@ -372,6 +380,32 @@ export class Game {
                 updateAllCoinCounters();
             });
         }
+
+        this.autoAttackButton.addEventListener("click", () => {
+            if (this.gameState == GAME_STATE.player_turn && !this.autoAttackInterval) {
+                this.startAutoAttack(Math.floor(PLAYER.speed));
+                this.autoAttackButton.innerText = "Disable Auto Attack";
+            } else {
+                this.stopAutoAttack();
+                this.autoAttackButton.innerText = "Enable Auto Attack";
+            }
+        });
+    }
+
+    startAutoAttack(interval = 1000) {
+        if (this.autoAttackInterval) clearInterval(this.autoAttackInterval);
+        this.autoAttackInterval = setInterval(() => {
+            if (this.gameState === GAME_STATE.player_turn) {
+                this.currentRoll = this.diceController.roll();
+                this.handleRoll(this.currentRoll);
+            }
+        }, interval);
+    }
+
+    stopAutoAttack() {
+        if (this.autoAttackInterval) clearInterval(this.autoAttackInterval);
+        this.autoAttackInterval = null;
+        this.autoAttackButton.innerText = "Enable Auto Attack";
     }
 
     unlockSkill() {

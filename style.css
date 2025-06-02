@@ -106,6 +106,12 @@ a {
     color: white;
 }
 
+#credit p {
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+}
+
 #menu {
     display: flex;
     max-width: 1000px;
@@ -510,4 +516,8 @@ img[src*="placeholder"] {
     flex-flow: row nowrap;
     justify-content: center;
     align-items: center;
+}
+
+#logo {
+    width: 128px;
 }
