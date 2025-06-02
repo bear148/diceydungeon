@@ -3,7 +3,7 @@ import { dungeon_structs } from './dungeon.js';
 import { Inventory } from './inventory.js';
 import { Item } from './item.js';
 import { ITEM_TYPE } from './enums.js';
-import { getRandomInt, refreshPlayerStats, RNG, updateAllCoinCounters } from './util.js';
+import { refreshPlayerStats, RNG, updateAllCoinCounters } from './util.js';
 
 export const GAME_STATE = {
     player_turn: 0,
