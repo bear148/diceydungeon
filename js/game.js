@@ -143,7 +143,6 @@ export class Game {
                 PLAYER.blocking = true;
                 break;
             default:
-                console.log(PLAYER.skills[this.settings[roll - 1]].stats.amount);
                 this.dungeon.enemies[this.dungeonEnemy].takeDamage(PLAYER.skills[this.settings[roll - 1]].stats.amount);
                 break;
         }
@@ -358,7 +357,6 @@ export class Game {
 
     createPlayerActionListeners() {
         this.controlContainer.children[1].addEventListener("click", () => {
-            console.log("Roll button clicked");
             if (this.gameState != GAME_STATE.player_turn) return;
             this.currentRoll = this.diceController.roll();
             this.handleRoll(this.currentRoll);

@@ -3,7 +3,6 @@ import { getRandomInt, getRandomWeaponImage, getRandomArmorImage, getRandomArmor
 
 export class Item {
     constructor(type) {
-        console.log(type);
         this.type = type;
         this.rarityID = this.getRandomRarity();
 
