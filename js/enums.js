@@ -3,6 +3,7 @@ export const ITEM_TYPE = {
     armor: 2,
     potion: 3,
     spell: 4,
+    xp_book: 5,
 }
 
 export const ARMOR_TYPE = {

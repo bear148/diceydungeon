@@ -83,6 +83,11 @@ export function getRandomArmorImage(type) {
 	}
 }
 
+export function getRandomBookImage() {
+	let books = Array.from({ length: 61 }, (_, i) => `/assets/books/book${i + 1}.png`);
+	return books[Math.floor(Math.random() * books.length)];
+}
+
 export function showTooltip(content, x, y) {
 	tooltip.innerHTML = content;
     tooltip.style.left = x + 10 + "px";

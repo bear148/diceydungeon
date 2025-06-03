@@ -1,5 +1,6 @@
 import { ITEM_TYPE, RARITY } from "./enums.js";
-import { getRandomInt, getRandomWeaponImage, getRandomArmorImage, getRandomArmorType, formalArmorName, getRandomSpellImage, getRandomSpellName } from "./util.js";
+import { PLAYER } from "./game.js";
+import { getRandomInt, getRandomWeaponImage, getRandomArmorImage, getRandomArmorType, formalArmorName, getRandomSpellImage, getRandomSpellName, getRandomBookImage } from "./util.js";
 
 export class Item {
     constructor(type) {
@@ -17,9 +18,13 @@ export class Item {
             this.name = "Potion";
             this.icon = "/assets/heal.png";
             this.rarityID = RARITY.common;
-        } else {
+        } else if (type == ITEM_TYPE.spell) {
             this.name = getRandomSpellName();
             this.icon = getRandomSpellImage();
+        } else {
+            this.name = "XP Book";
+            this.icon = getRandomBookImage();
+            this.rarityID = RARITY.uncommon; // XP books are always uncommon
         }
         
         this.stats = [];
@@ -71,6 +76,13 @@ export class Item {
                 this.stats = {
                     type: "Spell Power",
                     amount: getRandomInt(15, 30) * this.rarityID,
+                }
+                break;
+            }
+            case ITEM_TYPE.xp_book: {
+                this.stats = {
+                    type: "XP",
+                    amount: getRandomInt(50, 100) * PLAYER.level,
                 }
                 break;
             }

@@ -50,6 +50,9 @@ export class Inventory {
                 PLAYER.attack += this.currentItem.stats.amount;
             } else if (this.currentItem.type === ITEM_TYPE.spell) {
                 this.spellEquip(this.currentItem);
+            } else if (this.currentItem.type === ITEM_TYPE.xp_book) {
+                PLAYER.xp += this.currentItem.stats.amount;
+                this.removeItem(this.currentItem);
             }
 
             if (this.currentItemElement) {

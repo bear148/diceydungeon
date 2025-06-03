@@ -281,6 +281,9 @@ export class Game {
             let skill = new Item(ITEM_TYPE.spell).generate();
             PLAYER.skills.push(skill);
             this.Inventory.addItem(skill);
+        } else if (RNG(15)) {
+            let book = new Item(ITEM_TYPE.xp_book).generate();
+            this.Inventory.addItem(book);
         }
     }
 
