@@ -9,7 +9,7 @@ export function getRandomInt(min, max) {
 	return Math.floor(Math.random() * (max - min) + min);
 }
 
-export function getRandomWeaponImage() {
+export function getRandomWeaponInfo() {
 	const weapons = [
 		"assets/weapons/club.png",
 		"/assets/weapons/dagger.png",
@@ -20,7 +20,19 @@ export function getRandomWeaponImage() {
 		"/assets/weapons/short_sword2.png",
 	];
 
-	return weapons[Math.floor(Math.random() * weapons.length)];
+	const weaponNames = [
+		"Club",
+		"Dagger",
+		"Greatsword",
+		"Claymore",
+		"Knife",
+		"Cinquedea",
+		"Short Sword",
+	];
+
+	let choiceIndex = Math.floor(Math.random() * weapons.length);
+
+	return [weapons[choiceIndex], weaponNames[choiceIndex]];
 }
 
 export function getRandomSpellImage() {
@@ -62,6 +74,19 @@ export function getRandomArmorType() {
 	];
 
 	return types[Math.floor(Math.random() * types.length)];
+}
+
+export function randomDamageType() {
+	const damageTypes = [
+		"fire",
+		"ice",
+		"chaos",
+		"poison",
+		"arcane",
+		"physical",
+	];
+
+	return damageTypes[Math.floor(Math.random() * damageTypes.length)];
 }
 
 export function getRandomArmorImage(type) {

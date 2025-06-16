@@ -1,6 +1,7 @@
 import { ITEM_TYPE, RARITY } from "./enums.js";
 import { PLAYER } from "./game.js";
-import { getRandomInt, getRandomWeaponImage, getRandomArmorImage, getRandomArmorType, formalArmorName, getRandomSpellImage, getRandomSpellName, getRandomBookImage } from "./util.js";
+import { Rune } from "./rune.js";
+import { getRandomInt, getRandomWeaponInfo, getRandomArmorImage, getRandomArmorType, formalArmorName, getRandomSpellImage, getRandomSpellName, getRandomBookImage, randomDamageType } from "./util.js";
 
 export class Item {
     constructor(type) {
@@ -8,8 +9,9 @@ export class Item {
         this.rarityID = this.getRandomRarity();
 
         if (type == ITEM_TYPE.weapon) {
-            this.name = "Weapon";
-            this.icon = getRandomWeaponImage();
+            let i = getRandomWeaponInfo();
+            this.name = i[1];
+            this.icon = i[0];
         } else if (type == ITEM_TYPE.armor) {
             this.armorType = getRandomArmorType();
             this.name = formalArmorName(this.armorType);
@@ -21,10 +23,16 @@ export class Item {
         } else if (type == ITEM_TYPE.spell) {
             this.name = getRandomSpellName();
             this.icon = getRandomSpellImage();
-        } else {
+        } else if (type == ITEM_TYPE.xp_book) {
             this.name = "XP Book";
             this.icon = getRandomBookImage();
             this.rarityID = RARITY.uncommon; // XP books are always uncommon
+        } else {
+            let rune = new Rune();
+            this.name = rune.name;
+            this.icon = rune.icon;
+            this.rarityID = RARITY.rune; // Runes are always legendary
+            this.buffType = rune.buffType; // Buff type is specific to runes
         }
         
         this.stats = [];
@@ -55,6 +63,7 @@ export class Item {
                     type: "Damage",
                     amount: getRandomInt(1, 8) * this.rarityID,
                     speed: this.getRandomSpeed(),
+                    damageType: randomDamageType(),
                 }
                 break;
             case ITEM_TYPE.potion: {
@@ -83,6 +92,14 @@ export class Item {
                 this.stats = {
                     type: "XP",
                     amount: getRandomInt(50, 100) * PLAYER.level,
+                }
+                break;
+            }
+            case ITEM_TYPE.rune: {
+                this.stats = {
+                    type: `${this.buffType[1]} Increase`,
+                    btype: this.buffType[0],
+                    amount: Math.round(Math.random() * 100),
                 }
                 break;
             }
@@ -121,6 +138,8 @@ export class Item {
                 return "legendary";
             case 6:
                 return "exalted";
+            case 7:
+                return "rune";
             default:
                 return "programmer sux lol";
         }

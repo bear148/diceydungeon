@@ -92,6 +92,7 @@ export class Game {
     }
 
     init() {
+        console.log("Game initialized");
         this.toggleVisibility(this.startMenu, false);
         this.toggleVisibility(this.menu, true);
 
@@ -107,7 +108,7 @@ export class Game {
 
         if (RNG(10)) {
             this.unlockSkill();
-        }
+        } 
 
         refreshPlayerStats();
     }
@@ -225,7 +226,7 @@ export class Game {
             PLAYER.nextLevel = PLAYER.nextLevel + (PLAYER.nextLevel * 0.5);
         }
 
-        refreshPlayerStats(); 
+        refreshPlayerStats();
     }
 
     showPlayerControls() {

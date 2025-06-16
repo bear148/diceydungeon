@@ -4,6 +4,7 @@ export const ITEM_TYPE = {
     potion: 3,
     spell: 4,
     xp_book: 5,
+    rune: 6,
 }
 
 export const ARMOR_TYPE = {
@@ -20,4 +21,14 @@ export const RARITY = {
     epic: 4,
     legendary: 5,
     exalted: 6,
+    rune: 7,
+}
+
+export const DAMAGE_TYPE = {
+    fire: 2,
+    ice: 3,
+    chaos: 4,
+    poison: 7,
+    arcane: 9,
+    physical: 10,
 }

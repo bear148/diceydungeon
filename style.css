@@ -1,6 +1,8 @@
 :root {
     --blue: rgb(0, 0, 155);
     --l-blue: rgb(82, 82, 205);
+    --prefix: rgb(134, 134, 134);
+    --suffix: rgb(69, 255, 69);
 }
 
 html {
@@ -520,4 +522,55 @@ img[src*="placeholder"] {
 
 #logo {
     width: 128px;
+}
+
+.rune {
+    color: rgb(255, 115, 0);
+}
+
+.affix {
+    color: var(--suffix);
+    font-weight: bold;
+    display: inline-block;
+}
+
+.affix::first-letter {
+    text-transform: uppercase;
+}
+
+.prefix {
+    color: var(--prefix);
+}
+
+.fire {
+    color: red;
+}
+
+.ice {
+    color: rgb(101, 162, 255);
+}
+
+.chaos {
+    color: rgb(78, 0, 78);
+}
+
+.poison {
+    color: rgb(0, 255, 0);
+}
+
+.arcane {
+    color: rgb(0, 119, 255);
+}
+
+.physical {
+    color: rgb(255, 255, 0);
+}
+
+.weapon-grid-item {
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.weapon-grid-item p {
+    margin: 0;
 }

@@ -80,13 +80,9 @@ export class Inventory {
 
         itemElement.addEventListener("mouseenter", () => {
             let content = `
-                <p class="item-title">${item.name}</p>
-                <p class="item-stat">${item.stats.type}: ${item.stats.amount}</p>
+                <p class="item-title">${(item.type === ITEM_TYPE.weapon) ? "<span class='prefix'>" + item.stats.speed[1] + "</span>" + " " + item.name + " of " + `<span class='affix ${item.stats.damageType}'>` + item.stats.damageType + "</span>": item.name}</p>
+                <p class="item-stat">${item.stats.type}: ${(item.type === ITEM_TYPE.rune) ? `${item.stats.amount}%` : item.stats.amount}</p>
             `;
-
-            if (item.type === ITEM_TYPE.weapon) {
-                content += `<p class="item-speed">Speed: ${item.stats.speed[1]}</p>`;
-            }
 
             content += `<p class="item-rarity ${item.rarity.rarityName}">${item.rarity.rarityName}</p>`;
 
@@ -125,11 +121,15 @@ export class Inventory {
         document.getElementById("sell-item").classList.remove("hidden");
 
         useButton.innerText = "Use";
-        if (item.type != ITEM_TYPE.potion) {
+        if (item.type != ITEM_TYPE.potion || item.type != ITEM_TYPE.xp_book) {
             useButton.innerText = "Equip";
             document.getElementById("item-value").innerText = item.value;
         } else {
             document.getElementById("sell-item").classList.add("hidden");
+        }
+
+        if (item.type === ITEM_TYPE.rune) {
+            useButton.innerText = "Socket Rune";
         }
 
         this.itemPopup.style.left = x + "px";
@@ -196,8 +196,11 @@ export class Inventory {
                 break;
             case "hand":
                 document.getElementById("hands-image").src = this.currentItem.icon;
-                this.statElements[4].innerHTML = `Damage: ${this.currentItem.stats.amount}`;
-                this.statElements[4].className = `stat ${this.currentItem.rarity.rarityName}`;
+                this.statElements[4].innerHTML = `Speed: ${this.currentItem.stats.speed[1]}`;
+                this.statElements[5].innerHTML = `Damage: ${this.currentItem.stats.amount}`;
+                this.statElements[5].className = `stat ${this.currentItem.rarity.rarityName}`;
+                this.statElements[6].className = `stat ${this.currentItem.stats.damageType}`;
+                this.statElements[6].innerHTML = `<span class="affix ${this.currentItem.stats.damageType}">${this.currentItem.stats.damageType}</span>`;
                 PLAYER.speed = this.currentItem.stats.speed[0];
                 if (!PLAYER.weapon) {
                     PLAYER.weapon = this.currentItem;
