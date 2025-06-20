@@ -1,7 +1,7 @@
 import { ITEM_TYPE, RARITY } from "./enums.js";
 import { PLAYER } from "./game.js";
 import { Rune } from "./rune.js";
-import { getRandomInt, getRandomWeaponInfo, getRandomArmorImage, getRandomArmorType, formalArmorName, getRandomSpellImage, getRandomSpellName, getRandomBookImage, randomDamageType } from "./util.js";
+import { getRandomInt, getRandomWeaponInfo, getRandomArmorImage, getRandomArmorType, formalArmorName, getRandomSpellImage, getRandomSpellName, getRandomBookImage, randomDamageType, RNG } from "./util.js";
 
 export class Item {
     constructor(type) {
@@ -43,16 +43,23 @@ export class Item {
     }
 
     generate() {
+        let rTitle = this.getRarityTitle();
+        let socketNumber = this.getRandomSocketNumber();
+
         return {
             name: this.name,
             type: this.type,
             icon: this.icon,
             rarity: {
                 rarityID: this.rarityID,
-                rarityName: this.getRarityTitle(),
+                rarityName: rTitle,
             },
             stats: this.stats,
             value: this.value,
+            sockets: socketNumber,
+            availableSockets: socketNumber,
+            runes: [],
+            buffType: this.buffType || null, // Buff type is only for runes
         }
     }
 
@@ -159,6 +166,20 @@ export class Item {
             return [300, "Very Fast"];
         } else {
             return [150, "Lightning Fast"];
+        }
+    }
+
+    getRandomSocketNumber() {
+        if (RNG(50)) {
+            return 0; // 50% chance of no sockets
+        } else if (RNG(30)) {
+            return 1; // 30% chance of 1 socket
+        } else if (RNG(15)) {
+            return 2; // 15% chance of 2 sockets
+        } else if (RNG(4)) {
+            return 3; // 4% chance of 3 sockets
+        } else {
+            return 4; // 1% chance of 4 sockets
         }
     }
 }

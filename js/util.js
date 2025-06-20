@@ -115,8 +115,8 @@ export function getRandomBookImage() {
 
 export function showTooltip(content, x, y) {
 	tooltip.innerHTML = content;
-    tooltip.style.left = x + 10 + "px";
-    tooltip.style.top = y + 10 + "px";
+	tooltip.style.left = x + 10 + "px";
+	tooltip.style.top = y + 10 + "px";
 	tooltip.classList.remove("hidden");
 }
 
@@ -143,7 +143,7 @@ export function formalArmorName(type) {
 	}
 }
 
-export function	refreshPlayerStats() {
+export function refreshPlayerStats() {
 	document.getElementById("hlth").innerText = PLAYER.health;
 	document.getElementById("def").innerText = PLAYER.defense;
 	document.getElementById("atk").innerText = PLAYER.attack;
@@ -159,4 +159,12 @@ export function	refreshPlayerStats() {
 export function updateAllCoinCounters() {
 	document.getElementById("gold").innerText = PLAYER.coins;
 	document.getElementById("store-coins").innerText = PLAYER.coins;
+}
+
+export function toggleVisibility(element, isVisible) {
+	if (isVisible) {
+		element.classList.remove("hidden");
+	} else {
+		element.classList.add("hidden");
+	}
 }

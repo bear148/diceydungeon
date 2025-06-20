@@ -1,6 +1,6 @@
 import { ITEM_TYPE } from "./enums.js";
 import { PLAYER } from "./game.js";
-import { formalArmorName, hideTooltip, showTooltip, refreshPlayerStats } from "./util.js";
+import { formalArmorName, hideTooltip, showTooltip, refreshPlayerStats, toggleVisibility } from "./util.js";
 
 const useButton = document.getElementById("use-item");
 const sellButton = document.getElementById("sell-item");
@@ -13,6 +13,8 @@ export class Inventory {
         this.currentItem = null;
         this.currentItemElement = null;
         this.itemPopup = document.getElementById("item-menu");
+        this.socketPopup = document.getElementById("socket-menu");
+        this.socketOptions = document.getElementsByClassName("socket-option");
 
         this.eqiuppedArmor = document.getElementsByClassName("armor");
         this.statElements = document.getElementsByClassName("stat");
@@ -21,6 +23,10 @@ export class Inventory {
     }
 
     init() {
+        this.socketPopup.addEventListener("click", (e) => {
+            e.stopPropagation();
+        });
+
         sellButton.addEventListener("click", () => {
             if (!this.currentItem) return;
             if (this.currentItem.type === ITEM_TYPE.potion) return;
@@ -35,7 +41,7 @@ export class Inventory {
         });
 
         // Attach use button listener once
-        useButton.addEventListener("click", () => {
+        useButton.addEventListener("click", (event) => {
             if (!this.currentItem) return;
 
             if (this.currentItem.type === ITEM_TYPE.potion) {
@@ -53,19 +59,26 @@ export class Inventory {
             } else if (this.currentItem.type === ITEM_TYPE.xp_book) {
                 PLAYER.xp += this.currentItem.stats.amount;
                 this.removeItem(this.currentItem);
+            } else if (this.currentItem.type === ITEM_TYPE.rune) {
+                event.stopPropagation(); // <-- Add this line
+                this.socket(this.currentItem, event.x, event.y);
             }
 
-            if (this.currentItemElement) {
+            if (this.currentItemElement && this.currentItem.type !== ITEM_TYPE.rune) {
                 this.currentItemElement.remove();
             }
 
+            if (this.currentItem.type !== ITEM_TYPE.rune) {
+                this.hideItemPopup();
+            }
+
             refreshPlayerStats();
-            this.hideItemPopup();
         });
 
         // Attach document click listener once to hide popup when clicking outside
         document.addEventListener("click", () => {
             this.hideItemPopup();
+            this.hideSocketPopup();
         });
     }
 
@@ -80,9 +93,13 @@ export class Inventory {
 
         itemElement.addEventListener("mouseenter", () => {
             let content = `
-                <p class="item-title">${(item.type === ITEM_TYPE.weapon) ? "<span class='prefix'>" + item.stats.speed[1] + "</span>" + " " + item.name + " of " + `<span class='affix ${item.stats.damageType}'>` + item.stats.damageType + "</span>": item.name}</p>
+                <p class="item-title">${(item.type === ITEM_TYPE.weapon) ? "<span class='prefix'>" + item.stats.speed[1] + "</span>" + " " + item.name + " of " + `<span class='affix ${item.stats.damageType}'>` + item.stats.damageType + "</span>" : item.name}</p>
                 <p class="item-stat">${item.stats.type}: ${(item.type === ITEM_TYPE.rune) ? `${item.stats.amount}%` : item.stats.amount}</p>
             `;
+
+            if (item.type === ITEM_TYPE.armor || item.type === ITEM_TYPE.weapon) {
+                content += `<p class="item-stat">Sockets: ${item.availableSockets}</p>`;
+            }
 
             content += `<p class="item-rarity ${item.rarity.rarityName}">${item.rarity.rarityName}</p>`;
 
@@ -120,12 +137,13 @@ export class Inventory {
         this.currentItem = item;
         document.getElementById("sell-item").classList.remove("hidden");
 
-        useButton.innerText = "Use";
-        if (item.type != ITEM_TYPE.potion || item.type != ITEM_TYPE.xp_book) {
+        if (item.type === ITEM_TYPE.potion || item.type === ITEM_TYPE.xp_book) {
+            useButton.innerText = "Use";
+            toggleVisibility(document.getElementById("sell-item"), false);
+        } else {
             useButton.innerText = "Equip";
             document.getElementById("item-value").innerText = item.value;
-        } else {
-            document.getElementById("sell-item").classList.add("hidden");
+            toggleVisibility(document.getElementById("sell-item"), true);
         }
 
         if (item.type === ITEM_TYPE.rune) {
@@ -145,56 +163,87 @@ export class Inventory {
     }
 
     equip(loc) {
+        let index = 0;
+        this.currentItem.sockets = this.currentItem.availableSockets; // Reset available sockets when equipping
+
+
         switch (loc) {
             case "head":
+                index = 0;
                 this.eqiuppedArmor[0].src = this.currentItem.icon;
                 this.statElements[0].innerHTML = `Armor: ${this.currentItem.stats.amount}`;
                 this.statElements[0].className = `stat ${this.currentItem.rarity.rarityName}`;
-                if (!PLAYER.armor.head) {
-                    PLAYER.armor.head = this.currentItem;
-                    break;
+                // Return runes to inventory before replacing
+                if (PLAYER.armor.head && PLAYER.armor.head.runes && PLAYER.armor.head.runes.length > 0) {
+                    PLAYER.armor.head.runes.forEach(rune => {
+                        this.addItem(rune);
+                    });
+                    PLAYER.armor.head.runes = []; // Clear runes from the old armor
                 }
-                this.addItem(PLAYER.armor.head);
-                PLAYER.defense -= PLAYER.armor.head.stats.amount;
+                this.socketClear(index); // Clear rune sockets in the DOM for this slot
+                if (PLAYER.armor.head) {
+                    this.addItem(PLAYER.armor.head);
+                    PLAYER.defense -= PLAYER.armor.head.stats.amount;
+                }
                 PLAYER.armor.head = this.currentItem;
                 break;
             case "chest":
+                index = 1;
                 this.eqiuppedArmor[1].src = this.currentItem.icon;
                 this.statElements[1].innerHTML = `Armor: ${this.currentItem.stats.amount}`;
                 this.statElements[1].className = `stat ${this.currentItem.rarity.rarityName}`;
-                if (!PLAYER.armor.chest) {
-                    PLAYER.armor.chest = this.currentItem;
-                    break;
+                if (PLAYER.armor.chest && PLAYER.armor.chest.runes && PLAYER.armor.chest.runes.length > 0) {
+                    PLAYER.armor.chest.runes.forEach(rune => {
+                        this.addItem(rune);
+                    });
+                    PLAYER.armor.chest.runes = [];
                 }
-                this.addItem(PLAYER.armor.chest);
-                PLAYER.defense -= PLAYER.armor.chest.stats.amount;
+                this.socketClear(index);
+                if (PLAYER.armor.chest) {
+                    this.addItem(PLAYER.armor.chest);
+                    PLAYER.defense -= PLAYER.armor.chest.stats.amount;
+                }
                 PLAYER.armor.chest = this.currentItem;
                 break;
             case "boots":
+                index = 2;
                 this.eqiuppedArmor[2].src = this.currentItem.icon;
                 this.statElements[2].innerHTML = `Armor: ${this.currentItem.stats.amount}`;
                 this.statElements[2].className = `stat ${this.currentItem.rarity.rarityName}`;
-                if (!PLAYER.armor.boots) {
-                    PLAYER.armor.boots = this.currentItem;
-                    break;
+                if (PLAYER.armor.boots && PLAYER.armor.boots.runes && PLAYER.armor.boots.runes.length > 0) {
+                    PLAYER.armor.boots.runes.forEach(rune => {
+                        this.addItem(rune);
+                    });
+                    PLAYER.armor.boots.runes = [];
                 }
-                this.addItem(PLAYER.armor.boots);
-                PLAYER.defense -= PLAYER.armor.boots.stats.amount;
+                this.socketClear(index);
+                if (PLAYER.armor.boots) {
+                    this.addItem(PLAYER.armor.boots);
+                    PLAYER.defense -= PLAYER.armor.boots.stats.amount;
+                }
                 PLAYER.armor.boots = this.currentItem;
                 break;
             case "gloves":
+                index = 3;
                 this.eqiuppedArmor[3].src = this.currentItem.icon;
                 this.statElements[3].innerHTML = `Armor: ${this.currentItem.stats.amount}`;
                 this.statElements[3].className = `stat ${this.currentItem.rarity.rarityName}`;
-                if (!PLAYER.armor.gloves) {
-                    PLAYER.armor.gloves = this.currentItem;
-                    break;
+                if (PLAYER.armor.gloves && PLAYER.armor.gloves.runes && PLAYER.armor.gloves.runes.length > 0) {
+                    PLAYER.armor.gloves.forEach(rune => {
+                        this.addItem(rune);
+                    });
+                    PLAYER.armor.gloves.runes = []; // Clear runes from the old weapon
                 }
-                this.addItem(PLAYER.armor.gloves);
-                PLAYER.defense -= PLAYER.armor.gloves.stats.amount;
+                // Clear rune sockets in the DOM for this slot
+                this.socketClear(index);
+                if (PLAYER.armor.gloves) {
+                    this.addItem(PLAYER.armor.gloves);
+                    PLAYER.defense -= PLAYER.armor.gloves.stats.amount;
+                }
                 PLAYER.armor.gloves = this.currentItem;
                 break;
             case "hand":
+                index = 4;
                 document.getElementById("hands-image").src = this.currentItem.icon;
                 this.statElements[4].innerHTML = `Speed: ${this.currentItem.stats.speed[1]}`;
                 this.statElements[5].innerHTML = `Damage: ${this.currentItem.stats.amount}`;
@@ -202,15 +251,27 @@ export class Inventory {
                 this.statElements[6].className = `stat ${this.currentItem.stats.damageType}`;
                 this.statElements[6].innerHTML = `<span class="affix ${this.currentItem.stats.damageType}">${this.currentItem.stats.damageType}</span>`;
                 PLAYER.speed = this.currentItem.stats.speed[0];
-                if (!PLAYER.weapon) {
-                    PLAYER.weapon = this.currentItem;
-                    break;
+
+                // Return runes to inventory before replacing
+                if (PLAYER.weapon && PLAYER.weapon.runes && PLAYER.weapon.runes.length > 0) {
+                    PLAYER.weapon.runes.forEach(rune => {
+                        this.addItem(rune);
+                    });
+                    PLAYER.weapon.runes = []; // Clear runes from the old weapon
                 }
-                this.addItem(PLAYER.weapon);
-                PLAYER.attack -= PLAYER.weapon.stats.amount;
+                // Clear rune sockets in the DOM for this slot
+                this.socketClear(index);
+
+                if (PLAYER.weapon) {
+                    this.addItem(PLAYER.weapon);
+                    PLAYER.attack -= PLAYER.weapon.stats.amount;
+                }
                 PLAYER.weapon = this.currentItem;
                 break;
         }
+
+        console.log("Returning runes:", PLAYER.weapon.runes);
+        this.removeItem(this.currentItem);
     }
 
     spellEquip(spell) {
@@ -222,10 +283,84 @@ export class Inventory {
 
         for (let i = 0; i < options.length; i++) {
             let spellOption = document.createElement("option");
-            spellOption.value = (PLAYER.skills.length > 0) ? PLAYER.skills.length-1 : 0;
+            spellOption.value = (PLAYER.skills.length > 0) ? PLAYER.skills.length - 1 : 0;
             spellOption.textContent = `${spell.name}: ${spell.stats.amount}`;
             options[i].appendChild(spellOption);
         }
+    }
+
+    socket(rune, x, y) {
+        // Show the socket popup at the correct position
+        this.socketPopup.style.left = x + "px";
+        this.socketPopup.style.top = y + "px";
+        toggleVisibility(this.socketPopup, true);
+
+        // Clear previous options
+        this.socketPopup.innerHTML = ""; // Clear previous content
+        this.socketPopup.innerHTML = "<h3>Socket Rune To:</h3>";
+
+        // Gather socketable items (example: equipped weapon and armor)
+        const socketable = [];
+        if (PLAYER.weapon && PLAYER.weapon.sockets != 0) socketable.push({ slot: "w", item: PLAYER.weapon });
+        if (PLAYER.armor && PLAYER.armor.head && PLAYER.armor.head.sockets != 0) socketable.push({ slot: "h", item: PLAYER.armor.head });
+        if (PLAYER.armor && PLAYER.armor.chest && PLAYER.armor.chest.sockets != 0) socketable.push({ slot: "c", item: PLAYER.armor.chest });
+        if (PLAYER.armor && PLAYER.armor.boots && PLAYER.armor.boots.sockets != 0) socketable.push({ slot: "l", item: PLAYER.armor.boots });
+        if (PLAYER.armor && PLAYER.armor.gloves && PLAYER.armor.gloves.sockets != 0) socketable.push({ slot: "g", item: PLAYER.armor.gloves });
+
+        // Create a button for each socketable item
+        socketable.forEach(({ slot, item }) => {
+            const btn = document.createElement("button");
+            btn.innerText = item.name;
+            btn.onclick = () => {
+                if (!item.runes) item.runes = [];
+                item.runes.push(rune);
+
+                // Create a container for the rune image and subtitle
+                const runeContainer = document.createElement("div");
+                runeContainer.classList.add("rune-socket-container");
+
+                // Create the rune image
+                const runeElement = document.createElement("img");
+                runeElement.classList.add("socket");
+                runeElement.src = rune.icon;
+                runeElement.alt = "Socket";
+
+                // Create the subtitle
+                const subtitle = document.createElement("div");
+                subtitle.classList.add("rune-subtitle");
+                subtitle.innerText = `${rune.buffType[1]}: ${rune.stats.amount}%`;
+
+                // Append image and subtitle to the container
+                runeContainer.appendChild(runeElement);
+                runeContainer.appendChild(subtitle);
+
+                // Append the container to the socket area
+                document.getElementById(slot).children[2].appendChild(runeContainer);
+
+                item.sockets -= 1; // Decrease the rune's available sockets
+
+                this.removeItem(rune);
+                if (this.currentItemElement) this.currentItemElement.remove();
+                this.hideSocketPopup();
+            };
+            this.socketPopup.appendChild(btn);
+        });
+        // Optionally, add a cancel button
+        const cancelBtn = document.createElement("button");
+        cancelBtn.innerText = "Cancel";
+        cancelBtn.onclick = () => this.hideSocketPopup();
+        this.socketPopup.appendChild(cancelBtn);
+    }
+
+    socketClear(index) {
+        let DOMItem = document.getElementsByClassName("armor-grid-item")[index].children[2];
+
+        DOMItem.innerHTML = ""; // Clear previous sockets
+    }
+
+    hideSocketPopup() {
+        toggleVisibility(this.socketPopup, false);
+        this.hideItemPopup();
     }
 
     clear() {

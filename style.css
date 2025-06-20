@@ -65,6 +65,7 @@ button:hover {
     box-shadow: 3px 3px 30px var(--blue);
 }
 
+#socket-menu,
 #item-menu,
 a,
 button {
@@ -339,6 +340,7 @@ img {
     content: "Tip: ";
 }
 
+#socket-menu,
 #item-menu {
     position: fixed;
     color: white;
@@ -367,7 +369,7 @@ img {
 
 #armor-grid {
     display: flex;
-    flex-flow: row nowrap;
+    flex-flow: column nowrap;
     justify-content: space-around;
 }
 
@@ -428,6 +430,7 @@ img {
     z-index: 1000;
     outline: 3px solid #333;
     border: 1px dashed gold;
+    padding: 10px;
 }
 
 img[src*="placeholder"] {
@@ -453,8 +456,17 @@ img[src*="placeholder"] {
     content: "$";
 }
 
+#inv-stats-container {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
 #inv-stats-container p {
-    width: 200px;
+    width: fit-content;
 }
 
 .store-item {
@@ -516,8 +528,9 @@ img[src*="placeholder"] {
 .armor-grid-item {
     display: flex;
     flex-flow: row nowrap;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
+    width: 275px;
 }
 
 #logo {
@@ -573,4 +586,45 @@ img[src*="placeholder"] {
 
 .weapon-grid-item p {
     margin: 0;
+}
+
+#socket-container {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+    align-items: center;
+    width: 1000px;
+}
+
+#inv-style-container {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+}
+
+#inventory-container {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    width: 60%;
+}
+
+/* Add to your CSS file */
+.rune-socket-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 2px 0;
+}
+
+.rune-subtitle {
+    font-size: 0.7em;
+    color: #bbb;
+    margin-top: 2px;
+    text-align: center;
+    pointer-events: none;
+    user-select: none;
 }

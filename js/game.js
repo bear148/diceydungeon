@@ -3,7 +3,7 @@ import { dungeon_structs } from './dungeon.js';
 import { Inventory } from './inventory.js';
 import { Item } from './item.js';
 import { ITEM_TYPE } from './enums.js';
-import { refreshPlayerStats, RNG, updateAllCoinCounters } from './util.js';
+import { refreshPlayerStats, RNG, updateAllCoinCounters, toggleVisibility } from './util.js';
 
 export const GAME_STATE = {
     player_turn: 0,
@@ -93,8 +93,8 @@ export class Game {
 
     init() {
         console.log("Game initialized");
-        this.toggleVisibility(this.startMenu, false);
-        this.toggleVisibility(this.menu, true);
+        toggleVisibility(this.startMenu, false);
+        toggleVisibility(this.menu, true);
 
         this.createDungeonListeners();
         this.createNavigationListeners();
@@ -108,7 +108,20 @@ export class Game {
 
         if (RNG(10)) {
             this.unlockSkill();
-        } 
+        }
+
+        this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
+        this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
+        this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
+        this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
+        this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
+        this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
+        this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
+        this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
+        this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
+        this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
+
+        this.Inventory.addItem(new Item(ITEM_TYPE.weapon).generate());
 
         refreshPlayerStats();
     }
@@ -118,11 +131,11 @@ export class Game {
         this.dungeon = dungeon;
 
         // Ensure correct visibility
-        this.toggleVisibility(this.menu, false);
+        toggleVisibility(this.menu, false);
 
-        this.toggleVisibility(this.combatContainer, true);
-        this.toggleVisibility(this.diceContainer, true);
-        this.toggleVisibility(this.controlContainer, true);
+        toggleVisibility(this.combatContainer, true);
+        toggleVisibility(this.diceContainer, true);
+        toggleVisibility(this.controlContainer, true);
 
         this.combatContainer.children[0].innerText = dungeon.name;
         this.combatContainer.children[1].innerText = `0/${dungeon.enemies.length}`;
@@ -183,15 +196,15 @@ export class Game {
         }
 
         this.setGameState(GAME_STATE.player_turn);
-        this.toggleVisibility(this.controlContainer, true); // Ensure roll button is visible
+        toggleVisibility(this.controlContainer, true); // Ensure roll button is visible
         refreshPlayerStats();
     }
 
     goBackToDungeonMenu() {
-        this.toggleVisibility(this.combatContainer, false);
-        this.toggleVisibility(this.diceContainer, false);
-        this.toggleVisibility(this.controlContainer, false);
-        this.toggleVisibility(this.menu, true);
+        toggleVisibility(this.combatContainer, false);
+        toggleVisibility(this.diceContainer, false);
+        toggleVisibility(this.controlContainer, false);
+        toggleVisibility(this.menu, true);
 
         this.stopAutoAttack();
 
@@ -212,14 +225,14 @@ export class Game {
 
         let drop = RNG(50) ? new Item(ITEM_TYPE.weapon).generate() : new Item(ITEM_TYPE.armor).generate();
 
-        this.toggleVisibility(this.combatContainer, false);
-        this.toggleVisibility(this.diceContainer, false);
-        this.toggleVisibility(this.controlContainer, false);
+        toggleVisibility(this.combatContainer, false);
+        toggleVisibility(this.diceContainer, false);
+        toggleVisibility(this.controlContainer, false);
 
         this.Inventory.addItem(drop);
         PLAYER.inventory.push(drop);
 
-        this.toggleVisibility(document.getElementById("dungeon-over-container"), true);
+        toggleVisibility(document.getElementById("dungeon-over-container"), true);
 
         if (PLAYER.xp >= PLAYER.nextLevel) {
             PLAYER.level++;
@@ -230,11 +243,11 @@ export class Game {
     }
 
     showPlayerControls() {
-        this.toggleVisibility(this.controlContainer, true);
+        toggleVisibility(this.controlContainer, true);
     }
 
     hidePlayerControls() {
-        this.toggleVisibility(this.controlContainer, false);
+        toggleVisibility(this.controlContainer, false);
     }
 
     getGameState() {
@@ -288,22 +301,14 @@ export class Game {
         }
     }
 
-    toggleVisibility(element, isVisible) {
-        if (isVisible) {
-            element.classList.remove("hidden");
-        } else {
-            element.classList.add("hidden");
-        }
-    }
-
     setGameState(newState) {
         this.gameState = newState;
         switch (newState) {
             case GAME_STATE.player_turn:
-                this.toggleVisibility(this.controlContainer, true);
+                toggleVisibility(this.controlContainer, true);
                 break;
             case GAME_STATE.enemy_turn:
-                this.toggleVisibility(this.controlContainer, false);
+                toggleVisibility(this.controlContainer, false);
                 break;
             case GAME_STATE.battle_end:
                 this.triggerDungeonWin();
@@ -326,13 +331,13 @@ export class Game {
 
     createNavigationListeners() {
         document.getElementById("inventoryGo").addEventListener("click", () => {
-            this.toggleVisibility(this.menu, false);
-            this.toggleVisibility(this.inventoryContainer, true);
+            toggleVisibility(this.menu, false);
+            toggleVisibility(this.inventoryContainer, true);
         });
 
         document.getElementById("storeGo").addEventListener("click", () => {
-            this.toggleVisibility(this.storeContainer, true);
-            this.toggleVisibility(this.menu, false);
+            toggleVisibility(this.storeContainer, true);
+            toggleVisibility(this.menu, false);
 
             document.getElementById("store-coins").innerText = PLAYER.coins;
         })
@@ -341,21 +346,21 @@ export class Game {
             element.addEventListener("click", () => {
                 this.dungeon = null;
                 this.dungeonEnemy = 0;
-                this.toggleVisibility(element.parentElement, false);
+                toggleVisibility(element.parentElement, false);
                 this.setGameState(GAME_STATE.menu);
             });
         }
 
         for (const element of document.getElementsByClassName("backToDungeonSelect")) {
             element.addEventListener("click", () => {
-                this.toggleVisibility(element.parentElement, false);
+                toggleVisibility(element.parentElement, false);
                 this.setGameState(GAME_STATE.menu);
             });
         }
 
         document.getElementById("bindAttacks").addEventListener("click", () => {
-            this.toggleVisibility(this.menu, false);
-            this.toggleVisibility(this.settingsContainer, true);
+            toggleVisibility(this.menu, false);
+            toggleVisibility(this.settingsContainer, true);
         });
     }
 

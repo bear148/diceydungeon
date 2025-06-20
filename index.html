@@ -1,215 +1,236 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Dicey Dungeons</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="style.css">
-        <link rel="icon" href="/icon.webp" type="image/x-icon">
-    </head>
-    <body>
-        <div id="start-menu">
-            <img id="logo" src="/icon.webp" alt="Dicey Dungeons Logo">
-            <h1>Dicey Dungeons</h1>
-            <button id="startGame">Start Game</button>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Dicey Dungeons</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="/icon.webp" type="image/x-icon">
+</head>
+
+<body>
+    <div id="start-menu">
+        <img id="logo" src="/icon.webp" alt="Dicey Dungeons Logo">
+        <h1>Dicey Dungeons</h1>
+        <button id="startGame">Start Game</button>
+    </div>
+    <div id="game-container">
+        <div id="menu" class="hidden">
+            <h1>Pick A Dungeon</h1>
+            <div id="dungeon-container">
+                <div class="dungeon" data-dungeon-id="0" data-dungeon-name="muddy_swamp">
+                    <img class="dungeon-icon" src="/assets/swamp.png" alt="Muddy Swamp">
+                    <h2>Muddy Swamp</h2>
+                </div>
+                <div class="dungeon hidden" data-dungeon-id="1" data-dungeon-name="haunted_crypt" data-unlock="5">
+                    <img class="dungeon-icon" src="/assets/crypt.png" alt="Haunted Crypt">
+                    <h2>Haunted Crypt</h2>
+                </div>
+                <div class="dungeon hidden" data-dungeon-id="2" data-dungeon-name="russia" data-unlock="10">
+                    <img class="dungeon-icon" src="/assets/russia.png" alt="Russia">
+                    <h2>Russia</h2>
+                </div>
+                <div class="dungeon hidden" data-dungeon-id="3" data-dungeon-name="middle_ages" data-unlock="15">
+                    <img class="dungeon-icon" src="/assets/coa.png" alt="Middle Ages">
+                    <h2>Middle Ages</h2>
+                </div>
+                <div class="dungeon hidden" data-dungeon-id="4" data-dungeon-name="kings" data-unlock="30">
+                    <img class="dungeon-icon" src="/assets/crown.png" alt="Crown">
+                    <h2>Kings</h2>
+                </div>
+            </div>
+            <div class="nav">
+                <button id="bindAttacks">Bind Attacks</button>
+                <button id="inventoryGo">Inventory</button>
+                <button id="storeGo">Store</button>
+            </div>
+            <a href="/index.html">Back</a>
         </div>
-        <div id="game-container">
-            <div id="menu" class="hidden">
-                <h1>Pick A Dungeon</h1>
-                <div id="dungeon-container">
-                    <div class="dungeon" data-dungeon-id="0" data-dungeon-name="muddy_swamp">
-                        <img class="dungeon-icon" src="/assets/swamp.png" alt="Muddy Swamp">
-                        <h2>Muddy Swamp</h2>
+        <div id="combat-container" class="hidden">
+            <h1 id="dungeon-title"></h1>
+            <h2 id="enemy-counter">0/0</h2>
+            <div id="sprite-container">
+                <div id="player-sprite-container">
+                    <div class="player-info">
+                        <h3>You</h3>
+                        <p>Health: <span id="health">0</span></p>
+                        <p>Attack: <span id="attack">0</span></p>
+                        <p>Defense: <span id="defense">0</span></p>
                     </div>
-                    <div class="dungeon hidden" data-dungeon-id="1" data-dungeon-name="haunted_crypt" data-unlock="5">
-                        <img class="dungeon-icon" src="/assets/crypt.png" alt="Haunted Crypt">
-                        <h2>Haunted Crypt</h2>
-                    </div>
-                    <div class="dungeon hidden" data-dungeon-id="2" data-dungeon-name="russia" data-unlock="10">
-                        <img class="dungeon-icon" src="/assets/russia.png" alt="Russia">
-                        <h2>Russia</h2>
-                    </div>
-                    <div class="dungeon hidden" data-dungeon-id="3" data-dungeon-name="middle_ages" data-unlock="15">
-                        <img class="dungeon-icon" src="/assets/coa.png" alt="Middle Ages">
-                        <h2>Middle Ages</h2>
-                    </div>
-                    <div class="dungeon hidden" data-dungeon-id="4" data-dungeon-name="kings"  data-unlock="30">
-                        <img class="dungeon-icon" src="/assets/crown.png" alt="Crown">
-                        <h2>Kings</h2>
-                    </div>
+                    <img src="/assets/player.png" id="player-sprite" alt="Player Sprite">
                 </div>
-                <div class="nav">
-                    <button id="bindAttacks">Bind Attacks</button>
-                    <button id="inventoryGo">Inventory</button>
-                    <button id="storeGo">Store</button>
+                <div id="enemy-sprite-container">
+
                 </div>
-                <a href="/index.html">Back</a>
             </div>
-            <div id="combat-container" class="hidden">
-                <h1 id="dungeon-title"></h1>
-                <h2 id="enemy-counter">0/0</h2>
-                <div id="sprite-container">
-                    <div id="player-sprite-container">
-                        <div class="player-info">
-                            <h3>You</h3>
-                            <p>Health: <span id="health">0</span></p>
-                            <p>Attack: <span id="attack">0</span></p>
-                            <p>Defense: <span id="defense">0</span></p>
-                        </div>
-                        <img src="/assets/player.png" id="player-sprite" alt="Player Sprite">
-                    </div>
-                    <div id="enemy-sprite-container">
-                        
-                    </div>
-                </div>
-                <div id="dice-container" class="hidden">
-                    <img class="die" src="/assets/dice/1.png" alt="Die">
-                </div>
-                <div id="control-container" class="hidden">
-                    <button id="auto-attack-button">Enable Auto-attack</button>
-                    <button id="roll-die">Roll the Dice</button>
-                </div>
-                <button class="backToDungeonSelect">Back</button>
+            <div id="dice-container" class="hidden">
+                <img class="die" src="/assets/dice/1.png" alt="Die">
             </div>
-            <div id="inventory-container" class="hidden container">
-                <div id="tooltip" class="hidden"></div>
-                <div id="item-menu" class="hidden">
-                    <button id="use-item">Use</button>
-                    <button id="sell-item">Sell: <span id="item-value">0</span></button>
-                </div>
-                <h1>Inventory</h1>
-                <p class="tip">Click on items to open their menu.</p>
-                <div id="inventory-grid" class="grid">
-                    
+            <div id="control-container" class="hidden">
+                <button id="auto-attack-button">Enable Auto-attack</button>
+                <button id="roll-die">Roll the Dice</button>
+            </div>
+            <button class="backToDungeonSelect">Back</button>
+        </div>
+        <div id="inventory-container" class="hidden container">
+            <div id="tooltip" class="hidden"></div>
+            <div id="item-menu" class="hidden">
+                <button id="use-item">Use</button>
+                <button id="sell-item">Sell: <span id="item-value">0</span></button>
+            </div>
+            <div id="socket-menu" class="hidden">
+                <button id="socket-head" class="socket-option">Head</button>
+                <button id="socket-chest" class="socket-option">Chestpiece</button>
+                <button id="socket-legs" class="socket-option">Boots</button>
+                <button id="socket-gloves" class="socket-option">Gloves</button>
+                <button id="socket-hands" class="socket-option">Weapon</button>
+            </div>
+            <div id="inv-style-container">
+                <div>
+                    <h1>Inventory</h1>
+                    <p class="tip">Click on items to open their menu.</p>
+                    <div id="inventory-grid" class="grid">
+
+                    </div>
+                    <div id="inv-stats-container">
+                        <p id="lvl">1</p>
+                        <p id="xp">0</p>
+                        <p id="gold">0</p>
+                        <p id="hlth">100</p>
+                        <p id="atk">5</p>
+                        <p id="def">0</p>
+                    </div>
                 </div>
                 <div id="aux-stats-container">
                     <div id="armor-grid">
-                        <div class="armor-grid-item">
+                        <div class="armor-grid-item" id="h">
                             <img class="armor" id="helmet-image" src="/assets/placeholderhelm.png" alt="Helmet Image">
                             <p class="stat">0</p>
+                            <div class="socket-container">
+                            </div>
                         </div>
-                        <div class="armor-grid-item">
-                            <img class="armor" id="chestpiece-image" src="/assets/placeholderchest.png" alt="Chestpiece image">
+                        <div class="armor-grid-item" id="c">
+                            <img class="armor" id="chestpiece-image" src="/assets/placeholderchest.png"
+                                alt="Chestpiece image">
                             <p class="stat">0</p>
+                            <div class="socket-container">
+                            </div>
                         </div>
-                        <div class="armor-grid-item">
+                        <div class="armor-grid-item" id="l">
                             <img class="armor" id="legs-image" src="/assets/placeholderboots.png" alt="Leggings image">
                             <p class="stat">0</p>
+                            <div class="socket-container">
+                            </div>
                         </div>
-                        <div class="armor-grid-item">
+                        <div class="armor-grid-item" id="g">
                             <img class="armor" id="gloves-image" src="/assets/placeholdergloves.png" alt="Gloves image">
                             <p class="stat">0</p>
+                            <div class="socket-container">
+                            </div>
                         </div>
-                        <div class="armor-grid-item">
+                        <div class="armor-grid-item" id="w">
                             <img class="weapon" id="hands-image" src="/assets/placeholderweapon.png" alt="Weapon image">
                             <div class="weapon-grid-item">
                                 <p class="stat">0</p>
                                 <p class="stat">0</p>
                                 <p class="stat">0</p>
                             </div>
-                        </div>   
-                    </div>
-                    <div id="inv-stats-container">
-                        <div id="player-pstats-grid">
-                            <p id="lvl">1</p>
-                            <p id="xp">0</p>
-                            <p id="gold">0</p>
-                        </div>
-                        <div id="player-cstats-grid">
-                            <p id="hlth">100</p>
-                            <p id="atk">5</p>
-                            <p id="def">0</p>
+                            <div class="socket-container">
+                            </div>
                         </div>
                     </div>
                 </div>
-                <button class="backToDungeonSelect">Back</button>
             </div>
-            <div id="store-container" class="hidden container">
-                <h1>Store</h1>
-                <p id="store-balance"><span id="store-coins">0</span></p>
-                <div id="store">
-                    <div class="store-item">
-                        <img class="store-item-icon" src="/assets/heal.png" alt="Health Potion">
-                        <p class="store-item-name">Health Potion</p>
-                        <button class="buy-item" data-item-id="3" price="10">10</button>
-                    </div>
-                    <div class="store-item">
-                        <img class="store-item-icon" src="/assets/weapons/short_sword1.png" alt="Short Sword">
-                        <p class="store-item-name">Random Weapon Drop</p>
-                        <button class="buy-item" data-item-id="1" price="100">100</button>
-                    </div>
-                    <div class="store-item">
-                        <img class="store-item-icon" src="/assets/armor/chest.png" alt="Chestplate">
-                        <p class="store-item-name">Random Armor Drop</p>
-                        <button class="buy-item" data-item-id="2" price="100">100</button>
-                    </div>
-                    <div class="store-item">
-                        <img class="store-item-icon" src="/assets/spells/scroll1.png" alt="Spells">
-                        <p class="store-item-name">Random Spell Drop</p>
-                        <button class="buy-item" data-item-id="4" price="1000">1000</button>
-                    </div>
-                </div>
-                <button class="backToDungeonSelect">Back</button>
-            </div>
-            <div id="settings-container" class="hidden">
-                <h1>Settings</h1>
-                <div class="row settings-container-style">
-                    <div id="equipped-spells">
-                        <h2>Spells</h2>
-                    </div>
-                    <div class="column">
-                        <h2>Die Bindings</h2>
-                        <label for="1">1:</label>
-                        <select id="1s" class="dice-option" name="1">
-                            <option value="attack" selected="selected">Attack</option>
-                            <option value="defend">Defend</option>
-                        </select>
-                        <label for="2">2:</label>
-                        <select id="2s" class="dice-option" name="2">
-                            <option value="attack">Attack</option>
-                            <option value="defend" selected="selected">Defend</option>
-                        </select>
-                        <label for="3">3:</label>
-                        <select id="3s" class="dice-option" name="3">
-                            <option value="attack" selected="selected">Attack</option>
-                            <option value="defend">Defend</option>
-                        </select>
-                        <label for="4">4:</label>
-                        <select id="4s" class="dice-option" name="4">
-                            <option value="attack">Attack</option>
-                            <option value="defend" selected="selected">Defend</option>
-                        </select>
-                        <label for="5">5:</label>
-                        <select id="5s" class="dice-option" name="5">
-                            <option value="attack" selected="selected">Attack</option>
-                            <option value="defend">Defend</option>
-                        </select>
-                        <label for="6">6:</label>
-                        <select id="6s" class="dice-option" name="6">
-                            <option value="attack">Attack</option>
-                            <option value="defend" selected="selected">Defend</option>
-                        </select>
-                    </div>
-                </div>
-                <button class="backToDungeonSelect">Back</button>
-            </div>
-            <div id="game-over-container" class="hidden">
-                <h1>Game Over</h1>
-                <p id="game-over-message">You have been defeated!</p>
-                <button class="restartGame">Restart Game</button>
-            </div>
-            <div id="dungeon-over-container" class="hidden">
-                <h1>Dungeon Completed!</h1>
-                <p id="dungeon-over-message">You have defeated all the dungeon monsters!</p>
-                <button class="restartGame">Restart Game</button>
-            </div>
+            <button class="backToDungeonSelect">Back</button>
         </div>
-        <div id="credit">
-            <p>Made by Michael S. v0.0.3</p>
-            <p>Newest change: Item suffixes and prefixes (currently have no effect on gameplay). Rune back-end added.</p>
+        <div id="store-container" class="hidden container">
+            <h1>Store</h1>
+            <p id="store-balance"><span id="store-coins">0</span></p>
+            <div id="store">
+                <div class="store-item">
+                    <img class="store-item-icon" src="/assets/heal.png" alt="Health Potion">
+                    <p class="store-item-name">Health Potion</p>
+                    <button class="buy-item" data-item-id="3" price="10">10</button>
+                </div>
+                <div class="store-item">
+                    <img class="store-item-icon" src="/assets/weapons/short_sword1.png" alt="Short Sword">
+                    <p class="store-item-name">Random Weapon Drop</p>
+                    <button class="buy-item" data-item-id="1" price="100">100</button>
+                </div>
+                <div class="store-item">
+                    <img class="store-item-icon" src="/assets/armor/chest.png" alt="Chestplate">
+                    <p class="store-item-name">Random Armor Drop</p>
+                    <button class="buy-item" data-item-id="2" price="100">100</button>
+                </div>
+                <div class="store-item">
+                    <img class="store-item-icon" src="/assets/spells/scroll1.png" alt="Spells">
+                    <p class="store-item-name">Random Spell Drop</p>
+                    <button class="buy-item" data-item-id="4" price="1000">1000</button>
+                </div>
+            </div>
+            <button class="backToDungeonSelect">Back</button>
         </div>
-        <script src="/js/index.js" type="module" defer></script>
-    </body>
+        <div id="settings-container" class="hidden">
+            <h1>Settings</h1>
+            <div class="row settings-container-style">
+                <div id="equipped-spells">
+                    <h2>Spells</h2>
+                </div>
+                <div class="column">
+                    <h2>Die Bindings</h2>
+                    <label for="1">1:</label>
+                    <select id="1s" class="dice-option" name="1">
+                        <option value="attack" selected="selected">Attack</option>
+                        <option value="defend">Defend</option>
+                    </select>
+                    <label for="2">2:</label>
+                    <select id="2s" class="dice-option" name="2">
+                        <option value="attack">Attack</option>
+                        <option value="defend" selected="selected">Defend</option>
+                    </select>
+                    <label for="3">3:</label>
+                    <select id="3s" class="dice-option" name="3">
+                        <option value="attack" selected="selected">Attack</option>
+                        <option value="defend">Defend</option>
+                    </select>
+                    <label for="4">4:</label>
+                    <select id="4s" class="dice-option" name="4">
+                        <option value="attack">Attack</option>
+                        <option value="defend" selected="selected">Defend</option>
+                    </select>
+                    <label for="5">5:</label>
+                    <select id="5s" class="dice-option" name="5">
+                        <option value="attack" selected="selected">Attack</option>
+                        <option value="defend">Defend</option>
+                    </select>
+                    <label for="6">6:</label>
+                    <select id="6s" class="dice-option" name="6">
+                        <option value="attack">Attack</option>
+                        <option value="defend" selected="selected">Defend</option>
+                    </select>
+                </div>
+            </div>
+            <button class="backToDungeonSelect">Back</button>
+        </div>
+        <div id="game-over-container" class="hidden">
+            <h1>Game Over</h1>
+            <p id="game-over-message">You have been defeated!</p>
+            <button class="restartGame">Restart Game</button>
+        </div>
+        <div id="dungeon-over-container" class="hidden">
+            <h1>Dungeon Completed!</h1>
+            <p id="dungeon-over-message">You have defeated all the dungeon monsters!</p>
+            <button class="restartGame">Restart Game</button>
+        </div>
+    </div>
+    <div id="credit">
+        <p>Made by Michael S. v0.0.3</p>
+        <p>Newest change: Item suffixes and prefixes (currently have no effect on gameplay). Rune back-end added.</p>
+    </div>
+    <script src="/js/index.js" type="module" defer></script>
+</body>
+
 </html>
