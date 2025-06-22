@@ -64,11 +64,14 @@ export class Item {
     }
 
     generateStats() {
+        let dmg = getRandomInt(1, 8) * this.rarityID;
+
         switch (this.type) {
             case ITEM_TYPE.weapon:
                 this.stats = {
                     type: "Damage",
-                    amount: getRandomInt(1, 8) * this.rarityID,
+                    base_amount: dmg,
+                    amount: dmg,
                     speed: this.getRandomSpeed(),
                     damageType: randomDamageType(),
                 }

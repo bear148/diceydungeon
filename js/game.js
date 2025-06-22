@@ -21,6 +21,7 @@ export let PLAYER = {
     maxHealth: 100,
     coins: 10,
     attack: 5,
+    baseAttack: 5, // base attack without items
     defense: 0,
     speed: 1000, // time (in ms) between attacks for auto attack
     skills: [],
@@ -110,18 +111,18 @@ export class Game {
             this.unlockSkill();
         }
 
-        this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
-        this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
-        this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
-        this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
-        this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
-        this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
-        this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
-        this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
-        this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
-        this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
+        // this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
+        // this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
+        // this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
+        // this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
+        // this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
+        // this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
+        // this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
+        // this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
+        // this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
+        // this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
 
-        this.Inventory.addItem(new Item(ITEM_TYPE.weapon).generate());
+        // this.Inventory.addItem(new Item(ITEM_TYPE.weapon).generate());
 
         refreshPlayerStats();
     }
@@ -420,4 +421,9 @@ export class Game {
         PLAYER.skills.push(skill);
         this.Inventory.addItem(skill);
     }
+}
+
+export function updatePlayerAttack() {
+    PLAYER.attack = PLAYER.baseAttack + (PLAYER.hand ? PLAYER.hand.stats.amount : 0);
+    refreshPlayerStats();
 }

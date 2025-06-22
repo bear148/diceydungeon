@@ -146,12 +146,12 @@ export function formalArmorName(type) {
 export function refreshPlayerStats() {
 	document.getElementById("hlth").innerText = PLAYER.health;
 	document.getElementById("def").innerText = PLAYER.defense;
-	document.getElementById("atk").innerText = PLAYER.attack;
+	document.getElementById("atk").innerText = Math.round(PLAYER.attack);
 	document.getElementById("xp").innerText = PLAYER.xp;
 	document.getElementById("lvl").innerText = PLAYER.level;
 	document.getElementById("hlth").innerText = PLAYER.health;
 	document.getElementById("gold").innerText = PLAYER.coins;
-	document.getElementById("attack").innerText = PLAYER.attack;
+	document.getElementById("attack").innerText = Math.round(PLAYER.attack);
 	document.getElementById("defense").innerText = PLAYER.defense;
 	document.getElementById("health").innerText = PLAYER.health;
 }

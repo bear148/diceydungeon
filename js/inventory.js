@@ -1,5 +1,5 @@
 import { ITEM_TYPE } from "./enums.js";
-import { PLAYER } from "./game.js";
+import { PLAYER, updatePlayerAttack } from "./game.js";
 import { formalArmorName, hideTooltip, showTooltip, refreshPlayerStats, toggleVisibility } from "./util.js";
 
 const useButton = document.getElementById("use-item");
@@ -53,7 +53,6 @@ export class Inventory {
                 PLAYER.defense += this.currentItem.stats.amount;
             } else if (this.currentItem.type === ITEM_TYPE.weapon) {
                 this.equip("hand", this.currentItem);
-                PLAYER.attack += this.currentItem.stats.amount;
             } else if (this.currentItem.type === ITEM_TYPE.spell) {
                 this.spellEquip(this.currentItem);
             } else if (this.currentItem.type === ITEM_TYPE.xp_book) {
@@ -97,7 +96,7 @@ export class Inventory {
                 <p class="item-stat">${item.stats.type}: ${(item.type === ITEM_TYPE.rune) ? `${item.stats.amount}%` : item.stats.amount}</p>
             `;
 
-            if (item.type === ITEM_TYPE.armor || item.type === ITEM_TYPE.weapon) {
+            if (item.type === ITEM_TYPE.weapon) {
                 content += `<p class="item-stat">Sockets: ${item.availableSockets}</p>`;
             }
 
@@ -166,7 +165,6 @@ export class Inventory {
         let index = 0;
         this.currentItem.sockets = this.currentItem.availableSockets; // Reset available sockets when equipping
 
-
         switch (loc) {
             case "head":
                 index = 0;
@@ -191,14 +189,6 @@ export class Inventory {
                 index = 1;
                 this.eqiuppedArmor[1].src = this.currentItem.icon;
                 this.statElements[1].innerHTML = `Armor: ${this.currentItem.stats.amount}`;
-                this.statElements[1].className = `stat ${this.currentItem.rarity.rarityName}`;
-                if (PLAYER.armor.chest && PLAYER.armor.chest.runes && PLAYER.armor.chest.runes.length > 0) {
-                    PLAYER.armor.chest.runes.forEach(rune => {
-                        this.addItem(rune);
-                    });
-                    PLAYER.armor.chest.runes = [];
-                }
-                this.socketClear(index);
                 if (PLAYER.armor.chest) {
                     this.addItem(PLAYER.armor.chest);
                     PLAYER.defense -= PLAYER.armor.chest.stats.amount;
@@ -210,13 +200,6 @@ export class Inventory {
                 this.eqiuppedArmor[2].src = this.currentItem.icon;
                 this.statElements[2].innerHTML = `Armor: ${this.currentItem.stats.amount}`;
                 this.statElements[2].className = `stat ${this.currentItem.rarity.rarityName}`;
-                if (PLAYER.armor.boots && PLAYER.armor.boots.runes && PLAYER.armor.boots.runes.length > 0) {
-                    PLAYER.armor.boots.runes.forEach(rune => {
-                        this.addItem(rune);
-                    });
-                    PLAYER.armor.boots.runes = [];
-                }
-                this.socketClear(index);
                 if (PLAYER.armor.boots) {
                     this.addItem(PLAYER.armor.boots);
                     PLAYER.defense -= PLAYER.armor.boots.stats.amount;
@@ -228,14 +211,6 @@ export class Inventory {
                 this.eqiuppedArmor[3].src = this.currentItem.icon;
                 this.statElements[3].innerHTML = `Armor: ${this.currentItem.stats.amount}`;
                 this.statElements[3].className = `stat ${this.currentItem.rarity.rarityName}`;
-                if (PLAYER.armor.gloves && PLAYER.armor.gloves.runes && PLAYER.armor.gloves.runes.length > 0) {
-                    PLAYER.armor.gloves.forEach(rune => {
-                        this.addItem(rune);
-                    });
-                    PLAYER.armor.gloves.runes = []; // Clear runes from the old weapon
-                }
-                // Clear rune sockets in the DOM for this slot
-                this.socketClear(index);
                 if (PLAYER.armor.gloves) {
                     this.addItem(PLAYER.armor.gloves);
                     PLAYER.defense -= PLAYER.armor.gloves.stats.amount;
@@ -252,25 +227,35 @@ export class Inventory {
                 this.statElements[6].innerHTML = `<span class="affix ${this.currentItem.stats.damageType}">${this.currentItem.stats.damageType}</span>`;
                 PLAYER.speed = this.currentItem.stats.speed[0];
 
-                // Return runes to inventory before replacing
-                if (PLAYER.weapon && PLAYER.weapon.runes && PLAYER.weapon.runes.length > 0) {
-                    PLAYER.weapon.runes.forEach(rune => {
+                // 1. Subtract old weapon's attack (including rune bonuses)
+                if (PLAYER.hand) {
+                    PLAYER.attack -= PLAYER.hand.stats.amount;
+                }
+
+                // 2. Return runes to inventory before replacing
+                if (PLAYER.hand && PLAYER.hand.runes && PLAYER.hand.runes.length > 0) {
+                    PLAYER.hand.runes.forEach(rune => {
                         this.addItem(rune);
                     });
-                    PLAYER.weapon.runes = []; // Clear runes from the old weapon
+                    PLAYER.hand.runes = [];
                 }
-                // Clear rune sockets in the DOM for this slot
+
+                // 3. Reset stats.amount to base_amount for the old weapon (for inventory)
+                if (PLAYER.hand) {
+                    PLAYER.hand.stats.amount = PLAYER.hand.stats.base_amount;
+                    this.addItem(PLAYER.hand);
+                }
+
                 this.socketClear(index);
 
-                if (PLAYER.weapon) {
-                    this.addItem(PLAYER.weapon);
-                    PLAYER.attack -= PLAYER.weapon.stats.amount;
+                // 4. Equip new weapon and DO NOT reset its amount to base
+                PLAYER.hand = this.currentItem;
+                if (typeof PLAYER.hand.stats.amount !== "number" || isNaN(PLAYER.hand.stats.amount)) {
+                    PLAYER.hand.stats.amount = PLAYER.hand.stats.base_amount || 0;
                 }
-                PLAYER.weapon = this.currentItem;
+                PLAYER.attack += PLAYER.hand.stats.amount;
                 break;
         }
-
-        console.log("Returning runes:", PLAYER.weapon.runes);
         this.removeItem(this.currentItem);
     }
 
@@ -301,11 +286,7 @@ export class Inventory {
 
         // Gather socketable items (example: equipped weapon and armor)
         const socketable = [];
-        if (PLAYER.weapon && PLAYER.weapon.sockets != 0) socketable.push({ slot: "w", item: PLAYER.weapon });
-        if (PLAYER.armor && PLAYER.armor.head && PLAYER.armor.head.sockets != 0) socketable.push({ slot: "h", item: PLAYER.armor.head });
-        if (PLAYER.armor && PLAYER.armor.chest && PLAYER.armor.chest.sockets != 0) socketable.push({ slot: "c", item: PLAYER.armor.chest });
-        if (PLAYER.armor && PLAYER.armor.boots && PLAYER.armor.boots.sockets != 0) socketable.push({ slot: "l", item: PLAYER.armor.boots });
-        if (PLAYER.armor && PLAYER.armor.gloves && PLAYER.armor.gloves.sockets != 0) socketable.push({ slot: "g", item: PLAYER.armor.gloves });
+        if (PLAYER.hand && PLAYER.hand.sockets != 0) socketable.push({ slot: "w", item: PLAYER.hand });
 
         // Create a button for each socketable item
         socketable.forEach(({ slot, item }) => {
@@ -314,6 +295,7 @@ export class Inventory {
             btn.onclick = () => {
                 if (!item.runes) item.runes = [];
                 item.runes.push(rune);
+                item.stats.base_amount = item.stats.amount;
 
                 // Create a container for the rune image and subtitle
                 const runeContainer = document.createElement("div");
@@ -337,8 +319,24 @@ export class Inventory {
                 // Append the container to the socket area
                 document.getElementById(slot).children[2].appendChild(runeContainer);
 
-                item.sockets -= 1; // Decrease the rune's available sockets
+                item.sockets -= 1;
 
+                console.log("base_amount:", item.stats.base_amount, "amount:", item.stats.amount, "runes:", item.runes);
+
+                // Always recalculate from base_amount
+                let base = Number(item.stats.base_amount);
+                if (isNaN(base) || base === 0) base = Number(item.stats.amount) || 0; // fallback
+                let totalBonus = 0;
+                if (item.runes && item.runes.length > 0) {
+                    for (const r of item.runes) {
+                        let bonus = Number(r.stats.amount);
+                        if (!isNaN(bonus)) totalBonus += bonus;
+                    }
+                }
+                item.stats.amount = base + base * (totalBonus / 100);
+
+                updatePlayerAttack();
+                this.updateItemStats();
                 this.removeItem(rune);
                 if (this.currentItemElement) this.currentItemElement.remove();
                 this.hideSocketPopup();
@@ -361,6 +359,10 @@ export class Inventory {
     hideSocketPopup() {
         toggleVisibility(this.socketPopup, false);
         this.hideItemPopup();
+    }
+
+    updateItemStats() {
+        this.statElements[5].innerHTML = `Damage: ${Math.round(Number(PLAYER.hand.stats.amount))}`;
     }
 
     clear() {
