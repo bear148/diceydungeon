@@ -101,25 +101,16 @@ export class Game {
         this.createNavigationListeners();
         this.createPlayerActionListeners();
 
-        document.addEventListener("keydown", (event) => {
-            if (event.key === "Escape") {
-                this.playerLevelUp();
-            }
-        });
+        // document.addEventListener("keydown", (event) => {
+        //     if (event.key === "Escape") {
+        //         this.playerLevelUp();
+        //     }
+        // });
 
         if (RNG(10)) {
             this.unlockSkill();
         }
 
-        // this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
-        // this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
-        // this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
-        // this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
-        // this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
-        // this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
-        // this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
-        // this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
-        // this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
         // this.Inventory.addItem(new Item(ITEM_TYPE.rune).generate());
 
         // this.Inventory.addItem(new Item(ITEM_TYPE.weapon).generate());
@@ -299,6 +290,11 @@ export class Game {
         } else if (RNG(15)) {
             let book = new Item(ITEM_TYPE.xp_book).generate();
             this.Inventory.addItem(book);
+            PLAYER.inventory.push(book);
+        } else if (RNG(2)) {
+            let rune = new Item(ITEM_TYPE.rune).generate();
+            this.Inventory.addItem(rune);
+            PLAYER.inventory.push(rune);
         }
     }
 
