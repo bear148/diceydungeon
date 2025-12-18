@@ -5,6 +5,7 @@ export const ITEM_TYPE = {
     spell: 4,
     xp_book: 5,
     rune: 6,
+    crafting_material: 7,
 }
 
 export const ARMOR_TYPE = {
@@ -31,4 +32,18 @@ export const DAMAGE_TYPE = {
     poison: 7,
     arcane: 9,
     physical: 10,
+}
+
+export const CRAFTING_MATERIAL_TYPE = {
+    gem: 1,
+    essence: 2,
+    dust: 3,
+    fragment: 4,
+    string: 5,
+    stick: 6,
+}
+
+export const CRAFTABLE_ITEM_TYPE = {
+    enchant: 1,
+    destructor: 2,
 }

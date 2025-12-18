@@ -27,12 +27,14 @@ export class Item {
             this.name = "XP Book";
             this.icon = getRandomBookImage();
             this.rarityID = RARITY.uncommon; // XP books are always uncommon
-        } else {
+        } else if (type == ITEM_TYPE.rune) {
             let rune = new Rune();
             this.name = rune.name;
             this.icon = rune.icon;
             this.rarityID = RARITY.rune; // Runes are always legendary
             this.buffType = rune.buffType; // Buff type is specific to runes
+        } else if (type == ITEM_TYPE.crafting_material) {
+            // todo
         }
         
         this.stats = [];
