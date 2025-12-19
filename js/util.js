@@ -1,4 +1,4 @@
-import { ARMOR_TYPE } from "./enums.js";
+import { ARMOR_TYPE, CRAFTING_MATERIAL_TYPE } from "./enums.js";
 import { PLAYER } from "./game.js";
 
 const tooltip = document.getElementById("tooltip");
@@ -11,11 +11,11 @@ export function getRandomInt(min, max) {
 
 export function getRandomCraftingMaterialType() {
 	const types = [
-		ENUMS.CRAFTING_MATERIAL_TYPE.gem,
-		ENUMS.CRAFTING_MATERIAL_TYPE.essence,
-		ENUMS.CRAFTING_MATERIAL_TYPE.fragment,
-		ENUMS.CRAFTING_MATERIAL_TYPE.string,
-		ENUMS.CRAFTING_MATERIAL_TYPE.stick,
+		CRAFTING_MATERIAL_TYPE.gem,
+		CRAFTING_MATERIAL_TYPE.essence,
+		CRAFTING_MATERIAL_TYPE.fragment,
+		CRAFTING_MATERIAL_TYPE.string,
+		CRAFTING_MATERIAL_TYPE.stick,
 	]
 	return types[Math.floor(Math.random() * types.length)];
 };

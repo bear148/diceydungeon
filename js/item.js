@@ -35,10 +35,11 @@ export class Item {
             this.rarityID = RARITY.rune; // Runes are always legendary
             this.buffType = rune.buffType; // Buff type is specific to runes
         } else if (type == ITEM_TYPE.crafting_material) {
-            let raegent = new Crafting_Material(getRandomInt(1, 5), getRandomCraftingMaterialType());
+            let raegent = new Crafting_Material(getRandomInt(3, 10), getRandomCraftingMaterialType());
             this.name = raegent.name;
             this.icon = `/assets/crafting/${raegent.name.toLowerCase()}.png`;
-            this.rarityID = RARITY.common; // Crafting materials are always common
+            this.rarityID = RARITY.common;
+            this.quantity = raegent.quantity; // Crafting materials are always common
         }
         
         this.stats = [];
@@ -65,7 +66,9 @@ export class Item {
             sockets: socketNumber,
             availableSockets: socketNumber,
             runes: [],
-            buffType: this.buffType || null, // Buff type is only for runes
+            buffType: this.buffType || null,
+            quantity: 1, 
+            // Buff type is only for runes
         }
     }
 
@@ -116,6 +119,13 @@ export class Item {
                     type: `${this.buffType[1]} Increase`,
                     btype: this.buffType[0],
                     amount: Math.round(Math.random() * 100),
+                }
+                break;
+            }
+            case ITEM_TYPE.crafting_material: {
+                this.stats = {
+                    type: "Crafting Material",
+                    quantity: this.quantity,
                 }
                 break;
             }

@@ -82,18 +82,34 @@ export class Inventory {
     }
 
     addItem(item) {
+        let itemContainer = document.createElement("div");
         let itemElement = document.createElement("img");
-        itemElement.classList.add("grid-item");
+        let itemQuantityElement = document.createElement("span");
+
+        itemContainer.classList.add("grid-item");
+        itemContainer.appendChild(itemElement);
+        itemContainer.appendChild(itemQuantityElement);
+
         itemElement.src = item.icon;
-        itemElement.addEventListener("click", (event) => {
+        itemElement.classList.add("item-icon");
+
+        itemQuantityElement.classList.add("item-quantity");
+
+        if (item.stats.quantity && item.stats.quantity > 1) {
+            itemQuantityElement.innerText = item.stats.quantity;
+        } else {
+            itemQuantityElement.innerText = "1";
+        }
+
+        itemContainer.addEventListener("click", (event) => {
             event.stopPropagation(); // prevent document click hiding popup
             this.showItemPopup(event.clientX, event.clientY, itemElement, item);
         });
 
-        itemElement.addEventListener("mouseenter", () => {
+        itemContainer.addEventListener("mouseenter", () => {
             let content = `
                 <p class="item-title">${(item.type === ITEM_TYPE.weapon) ? "<span class='prefix'>" + item.stats.speed[1] + "</span>" + " " + item.name + " of " + `<span class='affix ${item.stats.damageType}'>` + item.stats.damageType + "</span>" : item.name}</p>
-                <p class="item-stat">${item.stats.type}: ${(item.type === ITEM_TYPE.rune) ? `${item.stats.amount}%` : item.stats.amount}</p>
+                <p class="item-stat">${item.stats.type}: ${(item.type === ITEM_TYPE.rune) ? `${item.stats.amount}%` : item.stats.quantity}</p>
             `;
 
             if (item.type === ITEM_TYPE.weapon) {
@@ -105,11 +121,11 @@ export class Inventory {
             showTooltip(content, event.clientX, event.clientY);
         });
 
-        itemElement.addEventListener("mouseleave", () => {
+        itemContainer.addEventListener("mouseleave", () => {
             hideTooltip();
         });
 
-        this.container.appendChild(itemElement);
+        this.container.appendChild(itemContainer);
 
         if (this.items.length < this.maxItems) {
             this.items.push(item);
@@ -132,21 +148,23 @@ export class Inventory {
     }
 
     showItemPopup(x, y, itemElement, item) {
+        if (item.type === ITEM_TYPE.crafting_material) return; // No popup for crafting materials
+        
         this.currentItemElement = itemElement;
         this.currentItem = item;
         document.getElementById("sell-item").classList.remove("hidden");
+        toggleVisibility(document.getElementById("sell-item"), false);
 
         if (item.type === ITEM_TYPE.potion || item.type === ITEM_TYPE.xp_book) {
             useButton.innerText = "Use";
-            toggleVisibility(document.getElementById("sell-item"), false);
+        } else if (item.type === ITEM_TYPE.rune) {
+            useButton.innerText = "Socket";
+        } else if (item.type === ITEM_TYPE.crafting_material) {
+            toggleVisibility(useButton, false);
         } else {
             useButton.innerText = "Equip";
             document.getElementById("item-value").innerText = item.value;
             toggleVisibility(document.getElementById("sell-item"), true);
-        }
-
-        if (item.type === ITEM_TYPE.rune) {
-            useButton.innerText = "Socket Rune";
         }
 
         this.itemPopup.style.left = x + "px";

@@ -107,6 +107,12 @@ export class Game {
         //     }
         // });
 
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "i") {
+                this.Inventory.addItem(new Item(ITEM_TYPE.crafting_material).generate());
+            }
+        });
+
         if (RNG(10)) {
             this.unlockSkill();
         }

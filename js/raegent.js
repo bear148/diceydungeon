@@ -1,4 +1,4 @@
-import { CRAFTING_MATERIAL_TYPE } from "./enums";
+import { CRAFTING_MATERIAL_TYPE } from "./enums.js";
 
 export class Crafting_Material {
     constructor(quantity, type) {
