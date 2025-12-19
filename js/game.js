@@ -288,9 +288,9 @@ export class Game {
             PLAYER.skills.push(skill);
             this.Inventory.addItem(skill);
         } else if (RNG(15)) {
-            let book = new Item(ITEM_TYPE.xp_book).generate();
-            this.Inventory.addItem(book);
-            PLAYER.inventory.push(book);
+            let drop = RNG(50) ? new Item(ITEM_TYPE.xp_book).generate() : new Item(ITEM_TYPE.crafting_material).generate();
+            this.Inventory.addItem(drop);
+            PLAYER.inventory.push(drop);
         } else if (RNG(2)) {
             let rune = new Item(ITEM_TYPE.rune).generate();
             this.Inventory.addItem(rune);

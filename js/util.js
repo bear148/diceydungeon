@@ -9,6 +9,17 @@ export function getRandomInt(min, max) {
 	return Math.floor(Math.random() * (max - min) + min);
 }
 
+export function getRandomCraftingMaterialType() {
+	const types = [
+		ENUMS.CRAFTING_MATERIAL_TYPE.gem,
+		ENUMS.CRAFTING_MATERIAL_TYPE.essence,
+		ENUMS.CRAFTING_MATERIAL_TYPE.fragment,
+		ENUMS.CRAFTING_MATERIAL_TYPE.string,
+		ENUMS.CRAFTING_MATERIAL_TYPE.stick,
+	]
+	return types[Math.floor(Math.random() * types.length)];
+};
+
 export function getRandomWeaponInfo() {
 	const weapons = [
 		"assets/weapons/club.png",

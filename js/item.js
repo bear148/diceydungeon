@@ -1,7 +1,8 @@
 import { ITEM_TYPE, RARITY } from "./enums.js";
 import { PLAYER } from "./game.js";
+import { Crafting_Material } from "./raegent.js";
 import { Rune } from "./rune.js";
-import { getRandomInt, getRandomWeaponInfo, getRandomArmorImage, getRandomArmorType, formalArmorName, getRandomSpellImage, getRandomSpellName, getRandomBookImage, randomDamageType, RNG } from "./util.js";
+import { getRandomInt, getRandomWeaponInfo, getRandomArmorImage, getRandomArmorType, formalArmorName, getRandomSpellImage, getRandomSpellName, getRandomBookImage, randomDamageType, RNG, getRandomCraftingMaterialType } from "./util.js";
 
 export class Item {
     constructor(type) {
@@ -34,7 +35,10 @@ export class Item {
             this.rarityID = RARITY.rune; // Runes are always legendary
             this.buffType = rune.buffType; // Buff type is specific to runes
         } else if (type == ITEM_TYPE.crafting_material) {
-            // todo
+            let raegent = new Crafting_Material(getRandomInt(1, 5), getRandomCraftingMaterialType());
+            this.name = raegent.name;
+            this.icon = `/assets/crafting/${raegent.name.toLowerCase()}.png`;
+            this.rarityID = RARITY.common; // Crafting materials are always common
         }
         
         this.stats = [];

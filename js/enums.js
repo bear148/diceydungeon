@@ -37,7 +37,6 @@ export const DAMAGE_TYPE = {
 export const CRAFTING_MATERIAL_TYPE = {
     gem: 1,
     essence: 2,
-    dust: 3,
     fragment: 4,
     string: 5,
     stick: 6,
