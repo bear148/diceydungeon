@@ -63,12 +63,12 @@ export class Item {
             },
             stats: this.stats,
             value: this.value,
-            sockets: socketNumber,
-            availableSockets: socketNumber,
-            runes: [],
+            sockets: (this.type != ITEM_TYPE.crafting_material) ? this.socketNumber : 0,
+            availableSockets: (this.type != ITEM_TYPE.crafting_material) ? socketNumber : 0,
+            runes: (this.type != ITEM_TYPE.crafting_material) ? [] : null,
             buffType: this.buffType || null,
-            quantity: 1, 
             // Buff type is only for runes
+            // I love ternary operators
         }
     }
 
@@ -124,8 +124,8 @@ export class Item {
             }
             case ITEM_TYPE.crafting_material: {
                 this.stats = {
-                    type: "Crafting Material",
-                    quantity: this.quantity,
+                    type: "Quantity",
+                    amount: this.quantity,
                 }
                 break;
             }

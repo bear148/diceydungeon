@@ -110,6 +110,9 @@ export class Game {
         document.addEventListener("keydown", (event) => {
             if (event.key === "i") {
                 this.Inventory.addItem(new Item(ITEM_TYPE.crafting_material).generate());
+                PLAYER.coins += 1000;
+                refreshPlayerStats();
+                console.log(this.Inventory.items);
             }
         });
 

@@ -92,24 +92,25 @@ export class Inventory {
 
         itemElement.src = item.icon;
         itemElement.classList.add("item-icon");
+        itemElement.classList.add(item.rarity.rarityName);
 
         itemQuantityElement.classList.add("item-quantity");
 
-        if (item.stats.quantity && item.stats.quantity > 1) {
-            itemQuantityElement.innerText = item.stats.quantity;
+        if (item.type === ITEM_TYPE.crafting_material) {
+            itemQuantityElement.innerText = item.stats.amount;
         } else {
             itemQuantityElement.innerText = "1";
         }
 
         itemContainer.addEventListener("click", (event) => {
             event.stopPropagation(); // prevent document click hiding popup
-            this.showItemPopup(event.clientX, event.clientY, itemElement, item);
+            this.showItemPopup(event.clientX, event.clientY, itemContainer, item);
         });
 
         itemContainer.addEventListener("mouseenter", () => {
             let content = `
                 <p class="item-title">${(item.type === ITEM_TYPE.weapon) ? "<span class='prefix'>" + item.stats.speed[1] + "</span>" + " " + item.name + " of " + `<span class='affix ${item.stats.damageType}'>` + item.stats.damageType + "</span>" : item.name}</p>
-                <p class="item-stat">${item.stats.type}: ${(item.type === ITEM_TYPE.rune) ? `${item.stats.amount}%` : item.stats.quantity}</p>
+                <p class="item-stat">${item.stats.type}: ${(item.type === ITEM_TYPE.rune) ? `${item.stats.amount}%` : item.stats.amount}</p>
             `;
 
             if (item.type === ITEM_TYPE.weapon) {
@@ -281,8 +282,7 @@ export class Inventory {
         let options = document.getElementsByClassName("dice-option");
 
         document.getElementById("equipped-spells").innerHTML += `
-        <p><span class="espell ${spell.rarity.rarityName}">${spell.name} ${spell.stats.amount}</span></p>
-        `;
+        <p><span class="espell ${spell.rarity.rarityName}">${spell.name} ${spell.stats.amount}</span></p>`;
 
         for (let i = 0; i < options.length; i++) {
             let spellOption = document.createElement("option");
