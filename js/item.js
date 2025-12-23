@@ -40,6 +40,7 @@ export class Item {
             this.icon = `/assets/crafting/${raegent.name.toLowerCase()}.png`;
             this.rarityID = RARITY.common;
             this.quantity = raegent.quantity; // Crafting materials are always common
+            this.quality = raegent.quality;
         }
         
         this.stats = [];
@@ -126,6 +127,7 @@ export class Item {
                 this.stats = {
                     type: "Quantity",
                     amount: this.quantity,
+                    quality: this.quality,
                 }
                 break;
             }

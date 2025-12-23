@@ -1,9 +1,10 @@
-import { CRAFTING_MATERIAL_TYPE } from "./enums.js";
+import { CRAFTING_MATERIAL_TYPE, ITEM_TYPE } from "./enums.js";
 
-export class Crafting_Material {
+class Crafting_Material {
     constructor(quantity, type) {
         this.quantity = quantity;
         this.type = type;
+        this.quality = 0; //0, 1, 2
 
         switch (this.type)  {
             case CRAFTING_MATERIAL_TYPE.gem:
@@ -31,3 +32,28 @@ export class Crafting_Material {
         }
     }
 }
+
+class Crafting_Manager {
+    constructor() {
+        this.recipes = [];
+    }
+
+    add_recipe(recipe) {
+        this.recipes.push(recipe);
+    }
+
+    craft_item(items) {
+        /*
+            Quality will be an important factor for determining what the product of the crafting process.
+            The quality of the crafting raegents will be used to determine the level of the final product.
+        */
+
+        if (items == {} || items === undefined) {
+            throw new Error("No items provided");
+        }
+
+        console.log(items);
+    }
+}
+
+export { Crafting_Material, Crafting_Manager };

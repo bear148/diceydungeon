@@ -4,6 +4,7 @@ import { Inventory } from './inventory.js';
 import { Item } from './item.js';
 import { ITEM_TYPE } from './enums.js';
 import { refreshPlayerStats, RNG, updateAllCoinCounters, toggleVisibility } from './util.js';
+import { Crafting_Manager } from './raegent.js';
 
 export const GAME_STATE = {
     player_turn: 0,
@@ -81,6 +82,7 @@ export class Game {
 
         this.diceController = new Dice(this.diceContainer);
         this.Inventory = new Inventory(this.inventoryGrid);
+        this.CraftingManager = new Crafting_Manager();
 
         this.dungeon = null;
         this.dungeonEnemy = 0;
@@ -107,14 +109,15 @@ export class Game {
         //     }
         // });
 
-        document.addEventListener("keydown", (event) => {
-            if (event.key === "i") {
-                this.Inventory.addItem(new Item(ITEM_TYPE.crafting_material).generate());
-                PLAYER.coins += 1000;
-                refreshPlayerStats();
-                console.log(this.Inventory.items);
-            }
-        });
+        // document.addEventListener("keydown", (event) => {
+        //     if (event.key === "i") {
+        //         let item = new Item(ITEM_TYPE.crafting_material).generate();
+        //         this.Inventory.addItem(item);
+        //         PLAYER.coins += 1000;
+        //         refreshPlayerStats();
+        //         this.CraftingManager.craft_item(item);
+        //     }
+        // });
 
         if (RNG(10)) {
             this.unlockSkill();
