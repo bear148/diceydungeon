@@ -109,15 +109,17 @@ export class Game {
         //     }
         // });
 
-        // document.addEventListener("keydown", (event) => {
-        //     if (event.key === "i") {
-        //         let item = new Item(ITEM_TYPE.crafting_material).generate();
-        //         this.Inventory.addItem(item);
-        //         PLAYER.coins += 1000;
-        //         refreshPlayerStats();
-        //         this.CraftingManager.craft_item(item);
-        //     }
-        // });
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "i") {
+                let item = new Item(ITEM_TYPE.crafting_material).generate();
+                this.Inventory.addItem(item);
+                PLAYER.coins += 1000;
+                refreshPlayerStats();
+                // this.CraftingManager.craft_item([
+                //     item
+                // ]);
+            }
+        });
 
         if (RNG(10)) {
             this.unlockSkill();

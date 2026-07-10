@@ -48,9 +48,13 @@ class Crafting_Manager {
             The quality of the crafting raegents will be used to determine the level of the final product.
         */
 
-        if (items == {} || items === undefined) {
+        if (items == [] || items === undefined) {
             throw new Error("No items provided");
         }
+
+        items.forEach(item => {
+            console.log(item);   
+        });
 
         console.log(items);
     }
